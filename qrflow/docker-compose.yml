@@ -15,8 +15,8 @@ services:
     restart: unless-stopped
     environment:
       - "APP_DEBUG=0"
-    env_file:
-      - ./secrets/webservice.env
+    #env_file:
+    #  - ./secrets/webservice.env
     volumes:
       - static-data:/home/qrflow/static
       - media-data:/home/qrflow/media
