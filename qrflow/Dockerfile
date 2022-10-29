@@ -11,7 +11,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update \
     && apt-get install -y \
        apt-transport-https \
-       build-essential \
        ca-certificates \
        python3-pip \
        python3-setuptools \
