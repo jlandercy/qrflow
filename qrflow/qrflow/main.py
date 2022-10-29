@@ -1,4 +1,5 @@
 import io
+import os
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, HTMLResponse
@@ -10,8 +11,8 @@ import qrflow
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static")), name="static")
+templates = Jinja2Templates(directory=os.getenv("APP_MEDIA_ROOT", "templates"))
 
 
 @app.get("/")
