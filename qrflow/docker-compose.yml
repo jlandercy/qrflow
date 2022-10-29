@@ -1,0 +1,42 @@
+version: "3.6"
+
+services:
+
+  webservice:
+    image: jlandercy/qrflow:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: image
+      args:
+       - "PROJECT_NAME=qrflow"
+       - "HTTP_HOST=0.0.0.0"
+       - "HTTP_PORT=8000"
+    restart: unless-stopped
+    environment:
+      - "APP_DEBUG=0"
+    env_file:
+      - ./secrets/webservice.env
+    volumes:
+      - static-data:/home/qrflow/static
+      - media-data:/home/qrflow/media
+    networks:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=backend"
+      - "traefik.http.routers.webservice.entrypoints=websecure"
+      - "traefik.http.routers.webservice.rule=Host(`landercy.be`) && PathPrefix(`/qrflow`)"
+      - "traefic.http.routers.webservice.tls=true"
+      - "traefik.http.routers.webservice.tls.certresolver=lets"
+      - "traefik.http.services.webservice.loadBalancer.server.port=8000"
+
+volumes:
+  static-data:
+    external: true
+  media-data:
+    external: true
+
+networks:
+  backend:
+    external: true
