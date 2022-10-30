@@ -9,18 +9,16 @@ services:
       dockerfile: Dockerfile
       target: image
       args:
-       - "PROJECT_NAME=qrflow"
-       - "HTTP_HOST=0.0.0.0"
-       - "HTTP_PORT=8000"
+        - "PROJECT_NAME=qrflow"
+        - "HTTP_HOST=0.0.0.0"
+        - "HTTP_PORT=8000"
     restart: unless-stopped
     environment:
-      - "APP_DEBUG=0"
-      - "ROOT_PATH=/qrflow"
-      - "APP_STATIC_ROOT=/home/qrflow/static"
+      - "HTTP_LOG_LEVEL=trace"
+      - "HTTP_URL_PREFIX=/qrflow"
     #env_file:
     #  - ./secrets/webservice.env
     volumes:
-      - static-data:/home/qrflow/static
       - media-data:/home/qrflow/media
     networks:
       - backend
@@ -36,8 +34,6 @@ services:
       - "traefik.http.routers.qrflow-webservice.middlewares=qrflow--redirect@docker"
 
 volumes:
-  static-data:
-    external: true
   media-data:
     external: true
 

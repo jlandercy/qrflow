@@ -47,7 +47,8 @@ ARG HTTP_PORT=8000
 ENV PROJECT_NAME=$PROJECT_NAME
 ENV HTTP_HOST=$HTTP_HOST
 ENV HTTP_PORT=$HTTP_PORT
-ENV ROOT_PATH=/
+ENV HTTP_URL_PREFIX=/
+ENV HTTP_LOG_LEVEL=warning
 
 # Create user and chown files:
 RUN adduser --disabled-password --gecos "" $PROJECT_NAME
@@ -57,7 +58,6 @@ USER $PROJECT_NAME:$PROJECT_NAME
 ENV PATH="/home/$PROJECT_NAME/.local/bin:$PATH"
 
 # Create resource directories:
-RUN mkdir /home/$PROJECT_NAME/static
 RUN mkdir /home/$PROJECT_NAME/media
 
 # Expose port:
@@ -79,4 +79,4 @@ ADD --chown=$PROJECT_NAME:$PROJECT_NAME ./$PROJECT_NAME ./$PROJECT_NAME
 WORKDIR /home/$PROJECT_NAME/$PROJECT_NAME
 
 # Start service:
-CMD python3 -m uvicorn main:app --root-path $ROOT_PATH --host $HTTP_HOST --port $HTTP_PORT
+CMD python3 -m uvicorn main:app --host $HTTP_HOST --port $HTTP_PORT --root-path $HTTP_URL_PREFIX --log-level $HTTP_LOG_LEVEL
