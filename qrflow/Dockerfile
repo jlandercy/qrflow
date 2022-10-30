@@ -1,3 +1,5 @@
+# ----------------------------------------------------------------------------------------------------------------------
+
 FROM python:3.10.7-bullseye AS builder
 
 LABEL description="Python 3 Base Image"
@@ -10,13 +12,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Update kernel:
 RUN apt-get update \
     && apt-get install -y \
-       apt-transport-https \
-       ca-certificates \
-       python3-pip \
-       python3-setuptools \
-       python3-venv \
-       software-properties-common \
-       wget \
+        apt-transport-https \
+        ca-certificates \
+        python3-pip \
+        python3-setuptools \
+        python3-venv \
+        software-properties-common \
+        wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -32,11 +34,12 @@ ENV PYTHONUNBUFFERED=1
 RUN python3 -m pip install --upgrade pip wheel setuptools && \
     python3 -m pip install --upgrade virtualenv
 
-# Image:
+# ----------------------------------------------------------------------------------------------------------------------
+
 FROM builder AS image
 
 # Image labels:
-LABEL description="Python 3 Project"
+LABEL description="Python 3 FastAPI+Uvicorn Project"
 
 # Build arguments:
 ARG PROJECT_NAME=qrflow
@@ -45,10 +48,10 @@ ARG HTTP_PORT=8000
 
 # Environment variables:
 ENV PROJECT_NAME=$PROJECT_NAME
+ENV HTTP_LOG_LEVEL=warning
 ENV HTTP_HOST=$HTTP_HOST
 ENV HTTP_PORT=$HTTP_PORT
 ENV HTTP_URL_PREFIX=/
-ENV HTTP_LOG_LEVEL=warning
 
 # Create user and chown files:
 RUN adduser --disabled-password --gecos "" $PROJECT_NAME
@@ -79,4 +82,9 @@ ADD --chown=$PROJECT_NAME:$PROJECT_NAME ./$PROJECT_NAME ./$PROJECT_NAME
 WORKDIR /home/$PROJECT_NAME/$PROJECT_NAME
 
 # Start service:
-CMD python3 -m uvicorn main:app --host $HTTP_HOST --port $HTTP_PORT --root-path $HTTP_URL_PREFIX --log-level $HTTP_LOG_LEVEL
+CMD python3 -m uvicorn main:app \
+    --host $HTTP_HOST --port $HTTP_PORT \
+    --root-path $HTTP_URL_PREFIX \
+    --log-level $HTTP_LOG_LEVEL
+
+# ----------------------------------------------------------------------------------------------------------------------
