@@ -1,0 +1,47 @@
+version: "3.6"
+
+services:
+
+  webservice:
+    image: jlandercy/qrflow:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: image
+      args:
+       - "PROJECT_NAME=qrflow"
+       - "HTTP_HOST=0.0.0.0"
+       - "HTTP_PORT=8000"
+    restart: unless-stopped
+    environment:
+      - "APP_DEBUG=0"
+      - "ROOT_PATH=/qrflow"
+      - "APP_STATIC_ROOT=/home/qrflow/static"
+      - "APP_MEDIA_ROOT=/home/qrflow/media"
+    #env_file:
+    #  - ./secrets/webservice.env
+    volumes:
+      - static-data:/home/qrflow/static
+      - media-data:/home/qrflow/media
+    networks:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=backend"
+      - "traefik.http.routers.qrflow-webservice.entrypoints=websecure"
+      - "traefik.http.routers.qrflow-webservice.rule=Host(`landercy.be`) && PathPrefix(`/qrflow`)"
+      - "traefic.http.routers.qrflow-webservice.tls=true"
+      - "traefik.http.routers.qrflow-webservice.tls.certresolver=lets"
+      - "traefik.http.services.qrflow-webservice.loadBalancer.server.port=8000"
+      #- "traefik.http.middlewares.qrflow--redirect.stripprefix.prefixes=/qrflow"
+      #- "traefik.http.routers.qrflow-webservice.middlewares=qrflow--redirect@docker"
+
+volumes:
+  static-data:
+    external: true
+  media-data:
+    external: true
+
+networks:
+  backend:
+    external: true
