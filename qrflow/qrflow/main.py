@@ -58,4 +58,4 @@ async def qrcode_create(message: Code):
     print(message.message)
     stream = qrflow.create_qrcode(message.message, inline=True)
     print(stream.getvalue().decode())
-    return Response(content=stream.getvalue().decode(), media_type="plain/text")
+    return Response(content=stream.getvalue(), media_type="application/octet-stream")
