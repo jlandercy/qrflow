@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row col-sm-12 p-5">
+        <p>Welcome</p>
+        <p><a href="{{ url_for('qrcode') }}">QR-Code</a></p>
+        <p><a href="{{ url_for('scanner') }}">Scanner</a></p>
+    </div>
+{% endblock %}

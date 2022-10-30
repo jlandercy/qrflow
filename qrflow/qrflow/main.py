@@ -19,22 +19,31 @@ app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static"
 templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"))
 
 
-@app.get("/")
-async def root():
-    return {
-        "name": app.title,
-        "version": app.version,
-        "documentation": "/docs/"
-    }
+# @app.get("/")
+# async def root():
+#     return {
+#         "name": app.title,
+#         "version": app.version,
+#         "documentation": "/docs/"
+#     }
+
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/scanner/read/", response_class=HTMLResponse)
+@app.get("/scanner/", response_class=HTMLResponse)
 async def scanner(request: Request):
     return templates.TemplateResponse("scanner.html", {"request": request})
 
 
+@app.get("/qrcode/", response_class=HTMLResponse)
+async def qrcode(request: Request):
+    return templates.TemplateResponse("qrcode.html", {"request": request})
+
+
 @app.get(
-    "/code/create/",
+    "/qrcode/create/",
     responses={
         200: {
             "content": {"image/png": {}}
@@ -42,9 +51,8 @@ async def scanner(request: Request):
     },
     response_class=Response,
 )
-async def create_code(request: Request, message: str = "Hello world!"):
+async def qrcode_create(request: Request, message: str = "Hello world!"):
     stream = io.BytesIO()
     image = qrflow.create_qrcode(message)
     image.save(stream)
     return Response(content=stream.getvalue(), media_type="image/png")
-
