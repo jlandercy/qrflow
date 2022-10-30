@@ -9,7 +9,11 @@ from fastapi.templating import Jinja2Templates
 import qrflow
 
 
-app = FastAPI()
+app = FastAPI(
+    version="20221030.1",
+    title="qrflow",
+    description="QR Flow Application by jlandercy"
+)
 
 app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static")), name="static")
 templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"))
@@ -18,8 +22,9 @@ templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"
 @app.get("/")
 async def root():
     return {
-        "name": "qrflow",
-        "version": "v0.0.1"
+        "name": app.title,
+        "version": app.version,
+        "documentation": "/docs"
     }
 
 
@@ -30,14 +35,14 @@ async def scanner(request: Request):
 
 @app.get(
     "/qrcode/generate/",
-    responses = {
+    responses={
         200: {
             "content": {"image/png": {}}
         }
     },
     response_class=Response,
 )
-async def generate_qrcode(request: Request, message: str="Hello world!"):
+async def generate_qrcode(request: Request, message: str = "Hello world!"):
     stream = io.BytesIO()
     image = qrflow.generate_qrcode(message)
     image.save(stream)
