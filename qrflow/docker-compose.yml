@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
     environment:
       - "APP_DEBUG=0"
+      - "ROOT_PATH=/qrflow"
       - "APP_STATIC_ROOT=/home/qrflow/static"
       - "APP_MEDIA_ROOT=/home/qrflow/media"
     #env_file:

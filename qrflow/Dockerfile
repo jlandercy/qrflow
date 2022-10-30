@@ -47,6 +47,7 @@ ARG HTTP_PORT=8000
 ENV PROJECT_NAME=$PROJECT_NAME
 ENV HTTP_HOST=$HTTP_HOST
 ENV HTTP_PORT=$HTTP_PORT
+ENV ROOT_PATH=/
 
 # Create user and chown files:
 RUN adduser --disabled-password --gecos "" $PROJECT_NAME
@@ -78,4 +79,4 @@ ADD --chown=$PROJECT_NAME:$PROJECT_NAME ./$PROJECT_NAME ./$PROJECT_NAME
 WORKDIR /home/$PROJECT_NAME/$PROJECT_NAME
 
 # Start service:
-CMD python3 -m uvicorn --host $HTTP_HOST --port $HTTP_PORT main:app
+CMD python3 -m uvicorn --host $HTTP_HOST --port $HTTP_PORT --root-path $ROOT_PATH  main:app
