@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
+
     <div class="row col-sm-12 p-2">
         <h3 class="page-header"><i class="bi bi-upc"></i> QR-Code</h3>
     </div>
+
     <div class="row col-sm-12 p-2">
         <form method="post" action="" class="form-group">
             <input type="text" name="key" id="key-textbox" class="form-control" value="" />
         </form>
-        <p><img id="qrcode-image" /></p>
     </div>
+
+    <div class="row col-sm-12 p-2">
+        <img id="qrcode-image" />
+    </div>
+
 
 <script>
 function update_qrcode(context) {
@@ -19,14 +25,26 @@ function update_qrcode(context) {
     };
     console.log(message);
 
+    /*
     $.post(
         "{{ url_for('qrcode_create') }}",
         json=message
-    ).done(
-        function(data) {
-            $("#qrcode-image").attr("src", data);
-        }
-    );
+    )
+    */
+
+    $.ajax({
+        url: "{{ url_for('qrcode_create') }}",
+        type: "POST",
+        data: JSON.stringify(message),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+    }).done(function(data) {
+        console.log(data);
+        $("#qrcode-image").attr("src", data);
+    }).fail(function(data) {
+        console.log("Arggsss");
+        console.log(data);
+    });
 
 }
 
