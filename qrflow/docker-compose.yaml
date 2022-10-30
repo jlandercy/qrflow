@@ -14,7 +14,7 @@ services:
         - "HTTP_PORT=8000"
     restart: unless-stopped
     environment:
-      - "HTTP_LOG_LEVEL=trace"
+      - "HTTP_LOG_LEVEL=info"
       - "HTTP_URL_PREFIX=/qrflow"
     #env_file:
     #  - ./secrets/webservice.env
