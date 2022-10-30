@@ -10,9 +10,9 @@
         <h3 class="page-header"><i class="bi bi-upc-scan"></i> Scanner</h3>
     </div>
     <!-- QR Code Reader -->
-    <div class="row col-sm-12 p-2">
+    <div class="row col-sm-12 p-2 text-centered">
         <div id="qr-reader" style="width:500px"></div>
-        <div id="qr-reader-results"></div>
+        <code><h3 id="qr-reader-results"></h3></code>
     </div>
     <script src="{{ url_for('static', path='js/scanner.js') }}"></script>
 {% endblock %}
