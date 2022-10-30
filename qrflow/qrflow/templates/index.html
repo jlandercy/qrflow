@@ -2,8 +2,13 @@
 
 {% block content %}
     <div class="row col-sm-12 p-5">
-        <p>Welcome</p>
-        <p><a href="{{ url_for('qrcode') }}">QR-Code</a></p>
-        <p><a href="{{ url_for('scanner') }}">Scanner</a></p>
+        <a href="{{ url_for('qrcode') }}" class="col-sm-2 text-center">
+            <i class="bi bi-upc" style="font-size: 50px;"></i>
+            <h5>QR-Code</h5>
+        </a>
+        <a href="{{ url_for('scanner') }}" class="col-sm-2 text-center">
+            <i class="bi bi-upc-scan" style="font-size: 50px;"></i>
+            <h5>Scanner</h5>
+        </a>
     </div>
 {% endblock %}
