@@ -85,6 +85,9 @@ WORKDIR /home/$PROJECT_NAME/$PROJECT_NAME
 CMD python3 -m uvicorn main:app \
     --host $HTTP_HOST --port $HTTP_PORT \
     --root-path $HTTP_URL_PREFIX \
-    --log-level $HTTP_LOG_LEVEL
+    --log-level $HTTP_LOG_LEVEL \
+    --forwarded-allow-ips="*"
+
+# https://stackoverflow.com/questions/70389129/getting-this-problem-from-firefox-or-chrome-blocked-loading-mixed-active-content
 
 # ----------------------------------------------------------------------------------------------------------------------
