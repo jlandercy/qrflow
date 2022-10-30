@@ -14,11 +14,10 @@
 <script>
 function update_qrcode(context) {
     var key = $(this).val();
-    $.get("/qrcode/create?message=" + key, function(data) {
+    $.get("{{ url_for('qrcode_create') }}?message=" + key, function(data) {
         $("#qrcode-image").attr("src", data);
     });
 }
-
 
 $(document).ready(update_qrcode);
 
