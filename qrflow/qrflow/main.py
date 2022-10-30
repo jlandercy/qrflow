@@ -1,7 +1,8 @@
-import io
 import os
 
-from fastapi import FastAPI, Request
+from pydantic import BaseModel
+
+from fastapi import FastAPI, Request, Body
 from fastapi.responses import Response, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -19,13 +20,9 @@ app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static"
 templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"))
 
 
-# @app.get("/")
-# async def root():
-#     return {
-#         "name": app.title,
-#         "version": app.version,
-#         "documentation": "/docs/"
-#     }
+class Code(BaseModel):
+    message: str
+
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -42,7 +39,7 @@ async def qrcode(request: Request):
     return templates.TemplateResponse("qrcode.html", {"request": request})
 
 
-@app.get(
+@app.post(
     "/qrcode/create/",
     responses={
         200: {
@@ -54,6 +51,8 @@ async def qrcode(request: Request):
     },
     response_class=Response,
 )
-async def qrcode_create(request: Request, message: str = "Hello world!"):
-    stream = qrflow.create_qrcode(message, inline=True)
+async def qrcode_create(request: Request, message: Code):
+    print(request)
+    print(message)
+    stream = qrflow.create_qrcode(message["message"], inline=True)
     return Response(content=stream.getvalue(), media_type="application/octet-stream")
