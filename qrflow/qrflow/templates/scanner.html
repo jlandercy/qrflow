@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
 {% block headers %}
-    <!-- https://github.com/mebjas/html5-qrcode -->
+    <!-- HTML5-QRCode (https://github.com/mebjas/html5-qrcode) -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 {% endblock %}
 
 {% block content %}
-
+    <!-- QR Code Reader -->
     <div class="row col-sm-12 p-5">
         <div id="qr-reader" style="width:500px"></div>
         <div id="qr-reader-results"></div>
     </div>
-
-    <script>
-    </script>
+    <script src="{{ url_for('static', path='js/scanner.js') }}"></script>
 {% endblock %}
