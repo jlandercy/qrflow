@@ -33,7 +33,7 @@ services:
       - "traefic.http.routers.qrflow-webservice.tls=true"
       - "traefik.http.routers.qrflow-webservice.tls.certresolver=lets"
       - "traefik.http.services.qrflow-webservice.loadBalancer.server.port=8000"
-      #- "traefik.http.middlewares.qrflow--redirect.stripprefix.prefixes=/jupyterhub"
+      #- "traefik.http.middlewares.qrflow--redirect.stripprefix.prefixes=/qrflow"
       #- "traefik.http.routers.qrflow-webservice.middlewares=qrflow--redirect@docker"
 
 volumes:
