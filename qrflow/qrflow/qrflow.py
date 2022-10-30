@@ -1,7 +1,12 @@
+import io
+import base64
+
 import qrcode
 
 
-def create_qrcode(message):
+def create_qrcode(message, inline=False):
+
+    # Create QR Code:
     code = qrcode.QRCode(
         version=None,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -11,11 +16,13 @@ def create_qrcode(message):
     code.add_data(message)
     code.make(fit=True)
     image = code.make_image(fill_color="black", back_color="white")
-    return image
 
+    # Render QR Code:
+    stream = io.BytesIO()
+    image.save(stream)
 
-if __name__ == "__main__":
+    if inline:
+        stream = io.BytesIO(b"data:image/png;base64," + base64.b64encode(stream.getvalue()))
 
-    image = create_qrcode("Some Identifier you want to scan")
-    with open("../../media/test.png", "wb") as handler:
-        image.save(handler)
+    return stream
+

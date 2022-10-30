@@ -46,13 +46,14 @@ async def qrcode(request: Request):
     "/qrcode/create/",
     responses={
         200: {
-            "content": {"image/png": {}}
+            "content": {
+                "image/png": {},
+                "application/octet-stream": {}
+            }
         }
     },
     response_class=Response,
 )
 async def qrcode_create(request: Request, message: str = "Hello world!"):
-    stream = io.BytesIO()
-    image = qrflow.create_qrcode(message)
-    image.save(stream)
-    return Response(content=stream.getvalue(), media_type="image/png")
+    stream = qrflow.create_qrcode(message, inline=True)
+    return Response(content=stream.getvalue(), media_type="application/octet-stream")

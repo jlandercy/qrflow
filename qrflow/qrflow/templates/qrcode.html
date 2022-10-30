@@ -2,6 +2,29 @@
 
 {% block content %}
     <div class="row col-sm-12 p-2">
-      <h3 class="page-header"><i class="bi bi-upc"></i> QR-Code</h3>
+        <h3 class="page-header"><i class="bi bi-upc"></i> QR-Code</h3>
     </div>
+    <div class="row col-sm-12 p-2">
+        <form method="post" action="" class="form-group">
+            <input type="text" name="key" id="key-textbox" class="form-control" />
+        </form>
+        <p><img id="qrcode-image" /></p>
+    </div>
+
+<script>
+function update_qrcode(context) {
+    var key = $(this).val();
+    $.get("/qrcode/create?message=" + key, function(data) {
+        $("#qrcode-image").attr("src", data);
+    });
+}
+
+
+$(document).ready(update_qrcode);
+
+$(document).ready(function(context) {
+    $("#key-textbox").keyup(update_qrcode);
+});
+</script>
+
 {% endblock %}
