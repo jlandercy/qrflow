@@ -12,7 +12,7 @@ import qrflow
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static")), name="static")
-templates = Jinja2Templates(directory=os.getenv("APP_MEDIA_ROOT", "templates"))
+templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"))
 
 
 @app.get("/")
