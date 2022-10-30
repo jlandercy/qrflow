@@ -39,11 +39,13 @@ function update_qrcode(context) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
     }).done(function(data) {
+        console.log("DONE");
+        console.log(data);
+        $("#qrcode-image").attr("src", data);
+    }).fail(function(data) {
+        console.log("FAIL");
         console.log(data);
         //$("#qrcode-image").attr("src", data);
-    }).fail(function(data) {
-        console.log("Arggsss");
-        console.log(data);
     });
 
 }

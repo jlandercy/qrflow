@@ -46,14 +46,12 @@ async def qrcode(request: Request):
             "content": {
                 #"image/png": {},
                 "application/octet-stream": {},
-                "plain/text": {},
-                #"application/json": {}
             }
         }
     },
     response_class=Response,
 )
-async def qrcode_create(message: Code):
+def qrcode_create(message: Code):
     print(message)
     print(message.message)
     stream = qrflow.create_qrcode(message.message, inline=True)

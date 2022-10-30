@@ -22,7 +22,7 @@ def create_qrcode(message, inline=False):
     image.save(stream)
 
     if inline:
-        stream = io.BytesIO(b"data:image/png;base64, " + base64.b64encode(stream.getvalue()))
+        stream = io.BytesIO(b"data:image/png;base64," + base64.b64encode(stream.getvalue()))
 
     return stream
 
