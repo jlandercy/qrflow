@@ -39,7 +39,7 @@ docReady(function() {
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader", {fps: 5, qrbox: 180}
+        "qr-reader", {fps: 10, qrbox: 100, aspectRatio: 1.75}
     );
     html5QrcodeScanner.render(onScanSuccess);
 
