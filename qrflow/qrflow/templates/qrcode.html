@@ -13,7 +13,7 @@
     </div>
 
     <div class="row col-sm-12 p-2">
-        <img id="qrcode-image" />
+        <p><img id="qrcode-image" /></p>
     </div>
 
 
@@ -23,29 +23,17 @@ function update_qrcode(context) {
     var message = {
         "message": $(this).val()
     };
-    console.log(message);
-
-    /*
-    $.post(
-        "{{ url_for('qrcode_create') }}",
-        json=message
-    )
-    */
+    //console.log(message);
 
     $.ajax({
         url: "{{ url_for('qrcode_create') }}",
         type: "POST",
         data: JSON.stringify(message),
         contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        //dataType: "json", /* make a big mess */
     }).done(function(data) {
-        console.log("DONE");
-        console.log(data);
+        //console.log(data);
         $("#qrcode-image").attr("src", data);
-    }).fail(function(data) {
-        console.log("FAIL");
-        console.log(data);
-        //$("#qrcode-image").attr("src", data);
     });
 
 }
