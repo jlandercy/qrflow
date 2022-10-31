@@ -22,18 +22,7 @@ class Payload(BaseModel):
     payload: str
 
 
-@router.post(
-    "/qrcode/create",
-    # responses={
-    #     200: {
-    #         "content": {
-    #             "image/png": {},
-    #             "application/json": {}
-    #         }
-    #     }
-    # },
-    # response_class=Response,
-)
+@router.post("/qrcode/create")
 async def qrcode_create(message: Message):
     stream = qrflow.render_qrcode(message.message, inline=True)
     return {
@@ -43,6 +32,5 @@ async def qrcode_create(message: Message):
 
 
 @router.post("/qrcode/process")
-async def qrcode_process(request: Request):
-    message = await request.form()
-    return jsonable_encoder(message)
+async def qrcode_process(message: Message):
+    return message
