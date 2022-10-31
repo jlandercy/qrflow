@@ -1,6 +1,6 @@
 function update_qrcode(context) {
 
-    console.log(context)
+    //console.log(context);
 
     var message = {
         "message": $(this).val()
@@ -8,7 +8,7 @@ function update_qrcode(context) {
     //console.log(message);
 
     $.ajax({
-        url: url,
+        url: qrcode_create_url,
         type: "POST",
         data: JSON.stringify(message),
         contentType: "application/json; charset=utf-8",
