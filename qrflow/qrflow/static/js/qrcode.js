@@ -1,5 +1,7 @@
 function update_qrcode(context) {
 
+    console.log(context)
+
     var message = {
         "message": $(this).val()
     };
@@ -18,8 +20,10 @@ function update_qrcode(context) {
 
 }
 
+// Trigger when document is ready:
 $(document).ready(update_qrcode);
 
+// Bind key up event as well:
 $(document).ready(function(context) {
     $("#key-textbox").keyup(update_qrcode);
 });
