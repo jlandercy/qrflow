@@ -25,13 +25,15 @@ docReady(function() {
             resultContainer.innerHTML = lastResult;
 
             // Submit to process:
-            $.post(
-                qrcode_process_url,
-                {"message": lastResult},
-                function(data) {
-                    console.log(data);
-                }
-            );
+            $.ajax({
+                url: qrcode_process_url,
+                type: "POST",
+                data: JSON.stringify({"message": lastResult}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            }).done(function(data) {
+                console.log(data);
+            });
 
         }
     }
