@@ -33,4 +33,4 @@ async def qrcode_create(message: Message):
 
 @router.post("/qrcode/process")
 async def qrcode_process(message: Message):
-    return message
+    return message.dict()
