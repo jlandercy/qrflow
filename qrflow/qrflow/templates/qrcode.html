@@ -16,33 +16,7 @@
         <p><img id="qrcode-image" /></p>
     </div>
 
-
-<script>
-function update_qrcode(context) {
-
-    var message = {
-        "message": $(this).val()
-    };
-    //console.log(message);
-
-    $.ajax({
-        url: "{{ url_for('qrcode_create') }}",
-        type: "POST",
-        data: JSON.stringify(message),
-        contentType: "application/json; charset=utf-8",
-        //dataType: "json", /* make a big mess */
-    }).done(function(data) {
-        //console.log(data);
-        $("#qrcode-image").attr("src", data);
-    });
-
-}
-
-$(document).ready(update_qrcode);
-
-$(document).ready(function(context) {
-    $("#key-textbox").keyup(update_qrcode);
-});
-</script>
+    <script type="text/javascript">var url = "{{ url_for('qrcode_create') }}";</script>
+    <script src="{{ url_for('static', path='js/qrcode.js') }}" type="text/javascript"></script>
 
 {% endblock %}
