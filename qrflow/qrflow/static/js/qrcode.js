@@ -7,7 +7,7 @@ function update_qrcode(context) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
     }).done(function(data) {
-        console.log(data);
+        //console.log(data);
         $("#qrcode-image").attr("src", data["payload"]);
     });
 
