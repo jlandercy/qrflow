@@ -4,7 +4,7 @@ import base64
 import qrcode
 
 
-def create_qrcode(payload):
+def create_qrcode(payload: str):
 
     # Create QR Code:
     code = qrcode.QRCode(
@@ -20,16 +20,18 @@ def create_qrcode(payload):
     return image
 
 
-def render_qrcode(payload, inline=False):
+def render_qrcode(payload: str, extension: str = "png", inline: bool = True):
 
     # Create QR Code:
     image = create_qrcode(payload)
 
     # Render QR Code:
     stream = io.BytesIO()
-    image.save(stream)
+    image.save(stream, format=extension)
 
     if inline:
-        stream = io.BytesIO(b"data:image/png;base64," + base64.b64encode(stream.getvalue()))
+        stream = io.BytesIO(
+            ("data:image/%s;base64, " % extension).encode() + base64.b64encode(stream.getvalue())
+        )
 
     return stream

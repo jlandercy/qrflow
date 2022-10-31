@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 
 from fastapi import APIRouter, Request
@@ -22,11 +23,22 @@ class Payload(BaseModel):
     payload: str
 
 
-@router.post("/qrcode/create")
-async def qrcode_create(message: Message):
-    stream = qrflow.render_qrcode(message.message, inline=True)
+@router.post(
+    "/qrcode/create",
+    # responses={
+    #     200: {
+    #         "content": {
+    #             "application/json": {},
+    #             "image/png": {},
+    #         }
+    #     }
+    # },
+    # response_class=Response
+)
+async def qrcode_create(request: Message):
+    stream = qrflow.render_qrcode(request.message, inline=True)
     return {
-        "message": message.message,
+        "message": request.message,
         "payload": stream.getvalue().decode()
     }
 
