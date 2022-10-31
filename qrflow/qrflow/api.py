@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 class Message(BaseModel):
-    message: str
+    message: str = "x"
 
 
 class Payload(BaseModel):
