@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from fastapi import APIRouter, Request
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 import qrflow
@@ -17,24 +17,32 @@ class Message(BaseModel):
     message: str
 
 
+class Payload(BaseModel):
+    message: str
+    payload: str
+
+
 @router.post(
-    "/qrcode/create/",
-    responses={
-        200: {
-            "content": {
-                "image/png": {},
-                "application/octet-stream": {},
-            }
-        }
-    },
-    response_class=Response,
+    "/qrcode/create",
+    # responses={
+    #     200: {
+    #         "content": {
+    #             "image/png": {},
+    #             "application/json": {}
+    #         }
+    #     }
+    # },
+    # response_class=Response,
 )
 async def qrcode_create(message: Message):
-    stream = qrflow.create_qrcode(message.message, inline=True)
-    return Response(content=stream.getvalue(), media_type="application/octet-stream")
+    stream = qrflow.render_qrcode(message.message, inline=True)
+    return {
+        "message": message.message,
+        "payload": stream.getvalue().decode()
+    }
 
 
-@router.post("/qrcode/process/")
-async def qrcode_process(request: Request): #message: Message):
+@router.post("/qrcode/process")
+async def qrcode_process(request: Request):
     message = await request.form()
     return jsonable_encoder(message)

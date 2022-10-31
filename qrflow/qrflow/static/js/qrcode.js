@@ -1,21 +1,14 @@
 function update_qrcode(context) {
 
-    //console.log(context);
-
-    var message = {
-        "message": $(this).val()
-    };
-    //console.log(message);
-
     $.ajax({
         url: qrcode_create_url,
         type: "POST",
-        data: JSON.stringify(message),
+        data: JSON.stringify({"message": $(this).val()}),
         contentType: "application/json; charset=utf-8",
-        dataType: "text",
+        dataType: "json",
     }).done(function(data) {
-        //console.log(data);
-        $("#qrcode-image").attr("src", data);
+        console.log(data);
+        $("#qrcode-image").attr("src", data["payload"]);
     });
 
 }

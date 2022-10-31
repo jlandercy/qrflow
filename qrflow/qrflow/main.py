@@ -30,11 +30,11 @@ async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/scanner/", response_class=HTMLResponse)
+@app.get("/scanner", response_class=HTMLResponse)
 async def scanner(request: Request):
     return templates.TemplateResponse("scanner.html", {"request": request})
 
 
-@app.get("/qrcode/", response_class=HTMLResponse)
+@app.get("/qrcode", response_class=HTMLResponse)
 async def qrcode(request: Request):
     return templates.TemplateResponse("qrcode.html", {"request": request})
