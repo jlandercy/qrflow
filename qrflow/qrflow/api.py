@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 from fastapi import APIRouter, Request
 from fastapi.responses import Response
+from fastapi.encoders import jsonable_encoder
 
 import qrflow
 
@@ -12,7 +13,7 @@ router = APIRouter(
 )
 
 
-class Code(BaseModel):
+class Message(BaseModel):
     message: str
 
 
@@ -28,7 +29,12 @@ class Code(BaseModel):
     },
     response_class=Response,
 )
-def qrcode_create(message: Code):
+async def qrcode_create(message: Message):
     stream = qrflow.create_qrcode(message.message, inline=True)
     return Response(content=stream.getvalue(), media_type="application/octet-stream")
 
+
+@router.post("/qrcode/process/")
+async def qrcode_process(request: Request): #message: Message):
+    message = await request.form()
+    return jsonable_encoder(message)
