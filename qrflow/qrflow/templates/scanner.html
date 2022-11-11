@@ -3,6 +3,11 @@
 {% block headers %}
     <!-- HTML5-QRCode (https://github.com/mebjas/html5-qrcode) -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- highligh.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-dark.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 {% endblock %}
 
 {% block content %}
@@ -17,8 +22,11 @@
         <div class="col-sm-8">
             <h4><strong><code id="qr-reader-format"></code></strong></h4>
             <h5><code id="qr-reader-content"></code></h5>
-            <pre><code id="qr-reader-scanned"></code></pre>
         </div>
+    </div>
+
+    <div class="row col-sm-12 p-2">
+        <pre><code id="qr-reader-scanned" class="language-json"></code></pre>
     </div>
 
     <script type="text/javascript">

@@ -8,6 +8,15 @@ function docReady(fn) {
     }
 }
 
+function escape(htmlStr) {
+   return htmlStr.replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#39;");
+
+}
+
 docReady(function() {
 
     var formatContainer = document.getElementById('qr-reader-format');
@@ -36,7 +45,7 @@ docReady(function() {
                 dataType: "json",
             }).done(function(data) {
                 console.log(data);
-                scannedContainer.innerHTML = JSON.stringify(data["result"]["scanned"], null, 2);
+                scannedContainer.innerHTML = escape(JSON.stringify(data["result"], null, 2));
             });
 
         }

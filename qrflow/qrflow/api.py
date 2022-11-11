@@ -7,8 +7,16 @@ from fastapi import APIRouter, Request
 from fastapi.responses import Response, JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+# DGC/CST:
+import re
+import zlib
+import base45
+import cbor2
+
+
 import main
 import qrflow
+
 
 
 router = APIRouter(
@@ -35,7 +43,14 @@ async def qrcode_create(request: Message):
     }
 
 
-scanned_items = collections.Counter()
+
+def decode(ticket):
+    b45data = re.sub("HC\d:", "", ticket)
+    zlibdata = base45.b45decode(b45data)
+    cbordata = zlib.decompress(zlibdata)
+    decoded = cbor2.loads(cbordata)
+    payload = cbor2.loads(decoded.value[2])
+    return payload
 
 
 @router.post("/qrcode/process")
@@ -45,10 +60,14 @@ async def qrcode_process(request: Request):
     except json.decoder.JSONDecodeError:
         raise main.GenericException("JSON body is expected")
     context = context.get("result", {})
-    scanned_items.update([context["text"]])
+    result = dict()
+    if context["text"].startswith("HC"):
+        result["dgc"] = decode(context["text"])
+    print(result)
     return {
         "context": context,
-        "result": {
-            "scanned": {k: v for k, v in scanned_items.items()}
-        }
+        "result": result
     }
+
+
+
