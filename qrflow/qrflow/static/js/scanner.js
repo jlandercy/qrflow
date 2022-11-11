@@ -10,7 +10,9 @@ function docReady(fn) {
 
 docReady(function() {
 
-    var resultContainer = document.getElementById('qr-reader-results');
+    var formatContainer = document.getElementById('qr-reader-format');
+    var contentContainer = document.getElementById('qr-reader-content');
+    var scannedContainer = document.getElementById('qr-reader-scanned');
     var lastResult, countResults = 0;
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -22,7 +24,8 @@ docReady(function() {
             console.log(`Scan result ${decodedText}`, decodedResult);
 
             // Update Interface:
-            resultContainer.innerHTML = '<strong>' + decodedResult["result"]["format"]["formatName"] + ':</strong> ' + lastResult + '';
+            formatContainer.innerHTML = decodedResult["result"]["format"]["formatName"];
+            contentContainer.innerHTML = lastResult;
 
             // Submit to process:
             $.ajax({
@@ -33,6 +36,7 @@ docReady(function() {
                 dataType: "json",
             }).done(function(data) {
                 console.log(data);
+                scannedContainer.innerHTML = JSON.stringify(data["result"]["scanned"], null, 2);
             });
 
         }

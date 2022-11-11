@@ -1,3 +1,4 @@
+import collections
 import json
 from enum import Enum
 from pydantic import BaseModel
@@ -34,6 +35,9 @@ async def qrcode_create(request: Message):
     }
 
 
+scanned_items = collections.Counter()
+
+
 @router.post("/qrcode/process")
 async def qrcode_process(request: Request):
     try:
@@ -41,7 +45,10 @@ async def qrcode_process(request: Request):
     except json.decoder.JSONDecodeError:
         raise main.GenericException("JSON body is expected")
     context = context.get("result", {})
+    scanned_items.update([context["text"]])
     return {
         "context": context,
-        "result": {}
+        "result": {
+            "scanned": {k: v for k, v in scanned_items.items()}
+        }
     }
