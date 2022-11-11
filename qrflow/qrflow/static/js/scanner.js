@@ -28,7 +28,7 @@ docReady(function() {
             $.ajax({
                 url: qrcode_process_url,
                 type: "POST",
-                data: JSON.stringify({"message": lastResult}),
+                data: JSON.stringify(decodedResult),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
             }).done(function(data) {

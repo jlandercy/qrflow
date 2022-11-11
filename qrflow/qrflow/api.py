@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 class Message(BaseModel):
-    message: str = "x"
+    message: str = "Sample Payload"
 
 
 class Payload(BaseModel):
@@ -23,18 +23,7 @@ class Payload(BaseModel):
     payload: str
 
 
-@router.post(
-    "/qrcode/create",
-    # responses={
-    #     200: {
-    #         "content": {
-    #             "application/json": {},
-    #             "image/png": {},
-    #         }
-    #     }
-    # },
-    # response_class=Response
-)
+@router.post("/qrcode/create")
 async def qrcode_create(request: Message):
     stream = qrflow.render_qrcode(request.message, inline=True)
     return {
@@ -44,5 +33,9 @@ async def qrcode_create(request: Message):
 
 
 @router.post("/qrcode/process")
-async def qrcode_process(message: Message):
-    return message.dict()
+async def qrcode_process(request: Request):
+    context = (await request.json()).get("result", {})
+    return {
+        "context": context,
+        "result": {}
+    }
