@@ -1,7 +1,7 @@
 import os
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -23,6 +23,18 @@ app.include_router(api.router)
 # Mounts:
 app.mount("/static", StaticFiles(directory=os.getenv("APP_STATIC_ROOT", "static")), name="static")
 templates = Jinja2Templates(directory=os.getenv("APP_TEMPLATE_ROOT", "templates"))
+
+
+class GenericException(Exception):
+    pass
+
+
+@app.exception_handler(GenericException)
+async def unicorn_exception_handler(request: Request, error: GenericException):
+    return JSONResponse(
+        status_code=400,
+        content={"message": str(error)},
+    )
 
 
 @app.get("/", response_class=HTMLResponse)

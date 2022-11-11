@@ -22,7 +22,7 @@ docReady(function() {
             console.log(`Scan result ${decodedText}`, decodedResult);
 
             // Update Interface:
-            resultContainer.innerHTML = lastResult;
+            resultContainer.innerHTML = '<strong>' + decodedResult["result"]["format"]["formatName"] + ':</strong> ' + lastResult + '';
 
             // Submit to process:
             $.ajax({

@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from pydantic import BaseModel
 
@@ -5,6 +6,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import Response, JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+import main
 import qrflow
 
 
@@ -34,7 +36,11 @@ async def qrcode_create(request: Message):
 
 @router.post("/qrcode/process")
 async def qrcode_process(request: Request):
-    context = (await request.json()).get("result", {})
+    try:
+        context = await request.json()
+    except json.decoder.JSONDecodeError:
+        raise main.GenericException("JSON body is expected")
+    context = context.get("result", {})
     return {
         "context": context,
         "result": {}
