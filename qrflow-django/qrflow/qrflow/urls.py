@@ -12,6 +12,7 @@ urlpatterns = [
     path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
     path('core/', include('core.urls', namespace="core")),
     path('pki/', include('pki.urls', namespace="pki")),
+    path('flow/', include('flow.urls', namespace="flow")),
     path('', views.ProjectHomeView.as_view(), name='index'),
 ]
 

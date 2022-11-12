@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
-{% block content%}
-<div class="container">
-    <div class="row col-sm-12">
-        <h1>QRFlow</h1>
-        {% if user.is_autheticated %}
-        <p>The application is <a href="{% url 'guestmap:guest-list' %}">here</a>...</p>
-        {% else %}
-        <p>You must <a href="{% url 'account:login' %}">login</a> first to use this application.</p>
-        {% endif %}
+{% block content %}
+    {% load static %}
+    <!--
+    <div class="row col-sm-12 p-2">
+        <h3 class="page-header"><img src="{% static 'favicon.png' %}" width="32pt" /> QR-Flow</h3>
     </div>
-</div>
+    -->
+    <div class="row col-sm-12 p-2">
+        <a href="{% url 'flow:qrcode' %}" class="col-sm-2 text-center">
+            <i class="bi bi-upc" style="font-size: 50px;"></i>
+            <h5>QR-Code</h5>
+        </a>
+        <a href="{% url 'flow:scanner' %}" class="col-sm-2 text-center">
+            <i class="bi bi-upc-scan" style="font-size: 50px;"></i>
+            <h5>Scanner</h5>
+        </a>
+    </div>
 {% endblock %}

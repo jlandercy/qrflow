@@ -1,3 +1,10 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class QRCodeView(TemplateView):
+    template_name = "flow/qrcode.html"
+
+
+class ScannerView(TemplateView):
+    template_name = "flow/scanner.html"
