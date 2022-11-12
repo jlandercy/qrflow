@@ -6,3 +6,4 @@ Faker==15.0.0
 faker_music==0.4
 numpy==1.23.3
 psycopg2==2.9.4
+cryptography==38.0.1
