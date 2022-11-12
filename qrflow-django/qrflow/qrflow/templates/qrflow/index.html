@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content%}
+<div class="container">
+    <div class="row col-sm-12">
+        <h1>Oli & Mat Wedding</h1>
+        {% if user.is_autheticated %}
+        <p>The application is <a href="{% url 'guestmap:guest-list' %}">here</a>...</p>
+        {% else %}
+        <p>You must <a href="{% url 'account:login' %}">login</a> first to use this application.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+div {
+    border: solid blue 0px;
+}
+
+.card {
+    background-color: #c6e2e9;
+    font-family: Sans-Serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1, h2, h3, p {
+    text-align: center;
+    font-family: Serif;
+}
+
+hr {
+  border: 1px solid #33ccff;
+  width: 80%;
+}

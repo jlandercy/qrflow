@@ -1,0 +1,70 @@
+version: "3.6"
+
+services:
+
+  olimat-database:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    env_file:
+      - ../secrets/qrflow-database.env
+    environment:
+      #- POSTGRES_PASSWORD=olimat
+      - POSTGRES_USER=qrflow
+      - POSTGRES_DB=qrflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "--dbname=jupyterhub", "--username=qrflow"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - qrflow-database:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  qrflow-webservice:
+    image: jlandercy/qrflow:1.1
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - qrflow-database
+    env_file:
+      - ../secrets/qrflow.env
+    environment:
+      - "APP_DEBUG_MODE=0"
+      - "APP_URL_PREFIX=qrflow/"
+      - "APP_ALLOWED_HOST=landercy.be"
+      - "APP_DATABASE_NAME=qrflow"
+      - "APP_DATABASE_USER=qrflow"
+      #- "APP_DATABASE_PASSWORD=qrflow"
+      - "APP_DATABASE_HOST=qrflow-database"
+      - "APP_STATIC_ROOT=/home/qrflow/static"
+      - "APP_MEDIA_ROOT=/home/qrflow/media"
+    volumes:
+      #- /datadrive/qrflow/static:/home/qrflow/static
+      #- /datadrive/qrflow/media:/home/qrflow/media
+      - qrflow-static:/home/qrflow/static
+      - qrflow-media:/home/qrflow/media
+    networks:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=backend"
+      - "traefik.http.routers.qrflow-webservice.entrypoints=websecure"
+      - "traefik.http.routers.qrflow-webservice.rule=Host(`landercy.be`) && PathPrefix(`/qrflow`)"
+      - "traefic.http.routers.qrflow-webservice.tls=true"
+      - "traefik.http.routers.qrflow-webservice.tls.certresolver=lets"
+      - "traefik.http.services.qrflow-webservice.loadBalancer.server.port=8080"
+      #- "traefik.http.middlewares.qrflow-redirect.stripprefix.prefixes=/qrflow"
+      #- "traefik.http.middlewares.qrflow-redirect.stripprefix.forceSlash=true"
+      #- "traefik.http.middlewares.qrflow-redirect.redirectregex.regex=^https://landercy.be/qrflow/(.*)"
+      #- "traefik.http.middlewares.qrflow-redirect.redirectregex.replacement=http://qrflow-webservice/$${1}"
+      #- "traefik.http.routers.qrflow-webservice.middlewares=qrflow-redirect@docker"
+
+networks:
+  backend:
+    external: true
+
+volumes:
+  qrflow-database:
+  qrflow-static:
+  qrflow-media:
