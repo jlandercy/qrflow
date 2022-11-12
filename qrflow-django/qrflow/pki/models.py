@@ -4,6 +4,8 @@ from django.db import models
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+from cryptography import x509
+
 from core.models import BaseAbstractModel, OwnershipAbstractModel
 from pki.helpers import CertificateHelper
 
@@ -19,6 +21,16 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
     name = models.CharField(max_length=128, unique=True)
     public_key = models.FileField(upload_to=organization_public_path, null=False, blank=True)
     private_key = models.FileField(upload_to=organization_private_path, null=False, blank=True)
+
+    @property
+    def signature(self):
+        print(self.public_key.read())
+        return x509.load_pem_x509_certificate(self.public_key.read()).signature.hex()
+
+    @property
+    def subject(self):
+        #return x509.load_pem_x509_certificate(self.public_key.read())#.subject.rfc4514_string()
+        return "a"
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None

@@ -12,6 +12,7 @@ class Application(BaseAbstractModel, OwnershipAbstractModel):
 
     name = models.CharField(max_length=128, unique=True)
     # Integration + Credentials
+    target = models.URLField()
 
 
 class Code(BaseAbstractModel):
@@ -24,12 +25,16 @@ class Code(BaseAbstractModel):
         )
 
     application = models.ForeignKey(Application, on_delete=models.RESTRICT)
-    payload = models.BinaryField()
+    name = models.CharField(max_length=1024, unique=True)
+    payload = models.JSONField()
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
 
     def save(self):
 
-        image = QRCodeHelper.render(self.payload)
+        if "payload" in self.payload:
+            image = QRCodeHelper.render(self.payload["payload"])
+        else:
+            image = QRCodeHelper.render(self.payload)
         self.image = InMemoryUploadedFile(image, 'ImageField', 'qrcode.png', 'PNG', image.getbuffer().nbytes, None)
 
         super().save()

@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import pki.models
+import flow.models
 import uuid
 
 
@@ -18,17 +18,31 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Certificate',
+            name='Application',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
                 ('name', models.CharField(max_length=128, unique=True)),
-                ('public_key', models.FileField(blank=True, upload_to=pki.models.Certificate.organization_public_path)),
-                ('private_key', models.FileField(blank=True, upload_to=pki.models.Certificate.organization_private_path)),
                 ('organization', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='core.organization')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['-created'],
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='Code',
+            fields=[
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('updated', models.DateTimeField(auto_now=True)),
+                ('deleted', models.BooleanField(default=False)),
+                ('payload', models.JSONField()),
+                ('image', models.ImageField(blank=True, max_length=512, upload_to=flow.models.Code.image_path)),
+                ('application', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='flow.application')),
             ],
             options={
                 'ordering': ['-created'],
