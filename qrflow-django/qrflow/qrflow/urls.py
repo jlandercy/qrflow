@@ -6,7 +6,7 @@ from django.conf.urls.static import static, serve
 from rest_framework import permissions
 from rest_framework.authtoken import views as auth_views
 
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView, TokenBlacklistView
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -42,9 +42,10 @@ urlpatterns = [
     # API (DRF):
     #path('api-auth/', include('rest_framework.urls')),
     #path('api-token-auth/', auth_views.obtain_auth_token),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/issue/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('api/', include((flow_api.urls, 'api'), namespace="api")),
 
     # DRF+Swagger

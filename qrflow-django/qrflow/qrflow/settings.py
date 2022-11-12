@@ -9,7 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("APP_SECRET_KEY", "2900a0f58e003aa8fbed4a1c69848e6889c88e7e098c691fea34c7d78f531887") #, secrets.token_hex(64))
+SECRET_KEY = os.getenv("APP_SECRET_KEY", "2900a0f58e003aa8fbed4a1c69848e6889c88e7e098c691fea34c7d78f531887")
+JWT_SECRET_KEY = os.getenv("APP_JWT_SECRET_KEY", secrets.token_hex(64))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.getenv("APP_DEBUG_MODE", "1")))
@@ -185,7 +186,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    'SIGNING_KEY': JWT_SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
