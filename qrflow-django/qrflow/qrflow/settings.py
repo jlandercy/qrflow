@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'bootstrap5',
     'crispy_forms',
     "crispy_bootstrap5",
+    'rest_framework',
+    #'rest_framework_swagger',
+    'drf_yasg',
     # Project:
     'core',
     'pki',
