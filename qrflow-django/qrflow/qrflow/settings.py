@@ -125,7 +125,7 @@ STATICFILES_DIRS = [
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.UUIDAutoField'
 
 MEDIA_URL = URL_PREFIX + 'media/'
 MEDIA_ROOT = os.getenv("APP_MEDIA_ROOT", BASE_DIR / 'media')
@@ -137,5 +137,9 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "https://landercy.be"]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_REDIRECT_URL = "guestmap:guest-list"
+LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+
+
+AUTH_USER_MODEL = "core.CustomUser"  # new
+
