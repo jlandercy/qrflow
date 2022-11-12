@@ -20,6 +20,9 @@ class ApplicationAdmin(admin.ModelAdmin):
 @admin.register(models.Code)
 class CodeAdmin(admin.ModelAdmin):
 
+    def _base64(self, obj):
+        return obj.base64[:128]
+
     def _image_tag(self, obj):
         return format_html('<a href="/media/{url}"><img src="/media/{url}" width="64px;" /></a>', url=obj.image)
 

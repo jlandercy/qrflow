@@ -1,4 +1,5 @@
 import io
+import base64
 
 from django.db import models
 from django.core.files import File
@@ -28,6 +29,10 @@ class Code(BaseAbstractModel):
     name = models.CharField(max_length=1024, unique=True)
     payload = models.JSONField()
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
+
+    @property
+    def base64(self):
+        return "data:image/png;base64, %s" % base64.b64encode(self.image.read()).decode()
 
     def save(self):
 
