@@ -26,18 +26,27 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    # Static & Media:
     #re_path("r^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}, name="static-server"),
     path(r"media/<path:path>", views.FileServerView.as_view(), name="file-server"),
+
+    # Admin & Accounts:
     path('admin/', admin.site.urls),
     path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
-    path('api-auth/', include('rest_framework.urls')),
+
+    # API:
+    #path('api-auth/', include('rest_framework.urls')),
     path('api/', include((flow_api.urls, 'api'), namespace="api")),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+
+    # Applications:
     path('core/', include('core.urls', namespace="core")),
     path('pki/', include('pki.urls', namespace="pki")),
     path('flow/', include('flow.urls', namespace="flow")),
+
+    # Home:
     path('', views.ProjectHomeView.as_view(), name='index'),
 ]
 
