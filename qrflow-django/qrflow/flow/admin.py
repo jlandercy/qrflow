@@ -21,6 +21,6 @@ class ApplicationAdmin(admin.ModelAdmin):
 class CodeAdmin(admin.ModelAdmin):
 
     def _image_tag(self, obj):
-        return mark_safe('<img src="/media/%s" width="64px;" />' % obj.image)
+        return format_html('<a href="/media/{url}"><img src="/media/{url}" width="64px;" /></a>', url=obj.image)
 
-    list_display = ('id', 'application', 'name', 'payload', 'image', '_image_tag')
+    list_display = ('id', 'application', 'name', 'payload', '_image_tag')
