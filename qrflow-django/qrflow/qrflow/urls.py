@@ -7,32 +7,33 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from qrflow import views
+from qrflow import views, __version__
 from flow.api import router as flow_api
 
 
 schema_view = get_schema_view(
    openapi.Info(
       title="QR-Flow API",
-      default_version='v1.0',
+      default_version=__version__,
       description="QR-Flow Management API",
       terms_of_service="https://www.landercy.be/terms/",
       contact=openapi.Contact(email="info@qrflow.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
-   permission_classes=[permissions.AllowAny],
+   permission_classes=[permissions.IsAuthenticatedOrReadOnly],
 )
 
 
 urlpatterns = [
+
     # Static & Media:
     #re_path("r^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}, name="static-server"),
     path(r"media/<path:path>", views.FileServerView.as_view(), name="file-server"),
 
     # Admin & Accounts:
     path('admin/', admin.site.urls),
-    path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
+    path('accounts/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
 
     # API:
     #path('api-auth/', include('rest_framework.urls')),
@@ -48,6 +49,7 @@ urlpatterns = [
 
     # Home:
     path('', views.ProjectHomeView.as_view(), name='index'),
+
 ]
 
 # Add prefix to classical URL:

@@ -148,3 +148,28 @@ LOGOUT_REDIRECT_URL = "index"
 
 AUTH_USER_MODEL = "core.CustomUser"  # new
 
+
+# https://www.django-rest-framework.org/api-guide/permissions/
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+# https://drf-yasg.readthedocs.io/en/stable/security.html
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
