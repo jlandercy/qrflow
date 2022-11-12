@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
     path('core/', include('core.urls', namespace="core")),
+    path('pki/', include('pki.urls', namespace="pki")),
     path('', views.ProjectHomeView.as_view(), name='index'),
 ]
 
