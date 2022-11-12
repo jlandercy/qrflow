@@ -1,5 +1,8 @@
+import io
+
 from django.db import models
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files import File
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from core.models import BaseAbstractModel, OwnershipAbstractModel
 from pki.toolbox import CertificateHelper
@@ -22,10 +25,17 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
     ):
 
         if not(self.public_key and self.private_key):
+
             # Create new certificates:
             key, cert = CertificateHelper.create_ca()
-            print(key, cert)
-            self.public_key = SimpleUploadedFile('x', CertificateHelper.to_public_pem(cert))
-            self.private_key = SimpleUploadedFile('y', CertificateHelper.to_private_pem(key))
-            print(self.public_key)
-            print(self.private_key)
+            public_key = io.BytesIO(CertificateHelper.to_public_pem(cert))
+            private_key = io.BytesIO(CertificateHelper.to_private_pem(key))
+
+            self.public_key = InMemoryUploadedFile(public_key, 'FileField', 'ca.crt', 'PEM', public_key.getbuffer().nbytes, None)
+            self.private_key = InMemoryUploadedFile(private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None)
+
+            # Infinite recursion loop, why?
+            #self.public_key.save(File(io.BytesIO(CertificateHelper.to_public_pem(cert))))
+            #self.private_key.save(File(io.BytesIO(CertificateHelper.to_private_pem(key))))
+
+        super().save()
