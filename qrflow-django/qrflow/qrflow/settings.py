@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     # Project:
     'core',
-    'pki'
+    'pki',
+    'flow',
 ]
 
 MIDDLEWARE = [
