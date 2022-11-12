@@ -23,6 +23,8 @@ class BaseAbstractModel(models.Model):
         if hasattr(self, "name"):
             return self.name
         else:
+            if isinstance(self.id, uuid.UUID):
+                return self.id.hex
             return self.id
 
 

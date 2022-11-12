@@ -5,5 +5,5 @@ from pki import models
 
 @admin.register(models.Certificate)
 class CertificateAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'organization', 'public_key', 'private_key')
 
