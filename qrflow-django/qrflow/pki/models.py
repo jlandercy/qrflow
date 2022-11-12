@@ -26,11 +26,12 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
 
         if not(self.public_key and self.private_key):
 
-            # Create new certificates:
+            # Create new CA Certificate:
             key, cert = CertificateHelper.create_ca()
             public_key = io.BytesIO(CertificateHelper.to_public_pem(cert))
             private_key = io.BytesIO(CertificateHelper.to_private_pem(key))
 
+            # Bind:
             self.public_key = InMemoryUploadedFile(public_key, 'FileField', 'ca.crt', 'PEM', public_key.getbuffer().nbytes, None)
             self.private_key = InMemoryUploadedFile(private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None)
 
