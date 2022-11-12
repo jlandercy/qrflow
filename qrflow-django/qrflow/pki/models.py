@@ -24,13 +24,13 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
 
     @property
     def signature(self):
-        print(self.public_key.read())
-        return x509.load_pem_x509_certificate(self.public_key.read()).signature.hex()
+        with self.public_key.open("rb") as handler:
+            return x509.load_pem_x509_certificate(handler.read()).signature.hex()
 
     @property
     def subject(self):
-        #return x509.load_pem_x509_certificate(self.public_key.read())#.subject.rfc4514_string()
-        return "a"
+        with self.public_key.open("rb") as handler:
+            return x509.load_pem_x509_certificate(handler.read()).subject.rfc4514_string()
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
