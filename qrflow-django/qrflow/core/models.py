@@ -55,3 +55,11 @@ class OwnershipAbstractModel(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
     owner = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
 
+    # def save(self, *args, **kwargs):
+    #     # Not called
+    #     request = kwargs.get('request')
+    #     print(request)
+    #     if request:
+    #         if request.user.is_authenticated():
+    #             self.user = request.user
+    #     super().save(*args, **kwargs)

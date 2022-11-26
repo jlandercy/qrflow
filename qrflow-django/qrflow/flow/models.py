@@ -18,6 +18,9 @@ class Application(BaseAbstractModel, OwnershipAbstractModel):
 
 class Code(BaseAbstractModel):
 
+    class Meta:
+        ordering = ("zorder", "name")
+
     def image_path(self, filename):
         return "organizations/{}/applications/{}/codes/{}".format(
             self.application.organization.id.hex,
@@ -29,6 +32,7 @@ class Code(BaseAbstractModel):
     name = models.CharField(max_length=1024, unique=True)
     payload = models.JSONField()
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
+    zorder = models.IntegerField(default=0)
 
     @property
     def base64(self):
