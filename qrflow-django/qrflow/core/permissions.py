@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 class NoPermissionMixin:
 
     def get_queryset(self, *args, **kwargs):
-        request = args[0] if args else self.request
+        request = args[0] if args else kwargs.get('request') or self.request
         query = super().get_queryset(*args, **kwargs)
         if request.user.is_superuser:
             return query
@@ -14,7 +14,7 @@ class NoPermissionMixin:
 class OrganizationPermissionMixin:
 
     def get_queryset(self, *args, **kwargs):
-        request = args[0] if args else self.request
+        request = args[0] if args else kwargs.get('request') or self.request
         query = super().get_queryset(*args, **kwargs)
         if request.user.is_superuser:
             return query
@@ -26,7 +26,7 @@ class OrganizationPermissionMixin:
 class OrganizationMembershipPermissionMixin:
 
     def get_queryset(self, *args, **kwargs):
-        request = args[0] if args else self.request
+        request = args[0] if args else kwargs.get('request') or self.request
         query = super().get_queryset(*args, **kwargs)
         if request.user.is_superuser:
             return query
