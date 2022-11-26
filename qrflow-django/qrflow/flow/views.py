@@ -6,7 +6,7 @@ from flow import models
 from core.permissions import OrganizationPermissionMixin
 
 
-class ApplicationListView(LoginRequiredMixin, ListView):
+class ApplicationListView(LoginRequiredMixin, OrganizationPermissionMixin, ListView):
     model = models.Application
 
 
