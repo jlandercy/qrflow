@@ -12,4 +12,3 @@ cbor2==5.4.3
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 drf-yasg==1.21.4
-
