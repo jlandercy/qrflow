@@ -8,7 +8,10 @@ from flow import models
 class ApplicationAdminMixin:
 
     def get_queryset(self, request):
-        return super().get_queryset(request).filter(
+        query = super().get_queryset(request)
+        if request.user.is_superuser:
+            return query
+        return query.filter(
             application__organization__in=request.user.organization_set.all()
         )
 
