@@ -11,7 +11,7 @@
     </div>
 
     <div class="row col-sm-12 p-2">
-        {% for object in object.application_set.all %}
+        {% for object in object.code_set.all %}
         <a href="" class="col-sm-2 text-center">
             <img src="{{ object.image.url }}" width="100px;" />
             <h5>{{ object.name }}</h5>

@@ -11,6 +11,12 @@
     </div>
 
     <div class="row col-sm-12 p-2">
+        {% for object in object.application_set.all %}
+        <a href="{% url 'flow:application-detail' object.id %}" class="col-sm-2 text-center">
+            <i class="bi bi-app-indicator" style="font-size: 50px;"></i>
+            <h5>{{ object.name }}</h5>
+        </a>
+        {% endfor %}
     </div>
 
 {% endblock %}
