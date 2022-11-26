@@ -1,7 +1,6 @@
 import io
 
 from django.db import models
-from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from cryptography import x509
@@ -43,12 +42,12 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
             public_key = io.BytesIO(CertificateHelper.to_public_pem(cert))
             private_key = io.BytesIO(CertificateHelper.to_private_pem(key))
 
-            # Bind:
-            self.public_key = InMemoryUploadedFile(public_key, 'FileField', 'ca.crt', 'PEM', public_key.getbuffer().nbytes, None)
-            self.private_key = InMemoryUploadedFile(private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None)
-
-            # Infinite recursion loop, why?
-            #self.public_key.save(File(io.BytesIO(CertificateHelper.to_public_pem(cert))))
-            #self.private_key.save(File(io.BytesIO(CertificateHelper.to_private_pem(key))))
+            # Bind PEM Files:
+            self.public_key = InMemoryUploadedFile(
+                public_key, 'FileField', 'ca.crt', 'PEM', public_key.getbuffer().nbytes, None
+            )
+            self.private_key = InMemoryUploadedFile(
+                private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None
+            )
 
         super().save()
