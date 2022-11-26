@@ -1,7 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-class NoPermissionMixin:
+class NoPermissionMixin(LoginRequiredMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
@@ -11,7 +12,7 @@ class NoPermissionMixin:
         return query.none()
 
 
-class OrganizationPermissionMixin:
+class OrganizationPermissionMixin(LoginRequiredMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
@@ -23,7 +24,7 @@ class OrganizationPermissionMixin:
         )
 
 
-class OrganizationMembershipPermissionMixin:
+class OrganizationMembershipPermissionMixin(LoginRequiredMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
