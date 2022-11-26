@@ -12,6 +12,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from qrflow import views, __version__
+from core.api import router as core_api
 from flow.api import router as flow_api
 
 
@@ -43,11 +44,12 @@ urlpatterns = [
     # API (DRF):
     #path('api-auth/', include('rest_framework.urls')),
     #path('api-token-auth/', auth_views.obtain_auth_token),
-    path('api/token/issue/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
-    path('api/', include((flow_api.urls, 'api'), namespace="api")),
+    path('api/token/issue/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token-verify'),
+    path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token-blacklist'),
+    path('api/core/', include((core_api.urls, 'core-api'), namespace="core-api")),
+    path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
 
     # DRF+Swagger:
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
