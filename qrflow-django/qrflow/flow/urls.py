@@ -12,4 +12,5 @@ urlpatterns = [
     path(r"scanner/", views.ScannerView.as_view(), name="scanner"),
     path(r"application/", views.ApplicationListView.as_view(), name="application-list"),
     path(r"application/<uuid:pk>/", views.ApplicationDetailView.as_view(), name="application-detail"),
+    path(r"code/<uuid:pk>/", views.CodeDetailView.as_view(), name="code-detail"),
 ]

@@ -14,6 +14,10 @@ class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
 
+class CodeDetailView(DetailView):
+    model = models.Code
+
+
 class QRCodeView(TemplateView):
     template_name = "flow/qrcode.html"
 
