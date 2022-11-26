@@ -12,11 +12,11 @@ from core import serializers
 router = routers.SimpleRouter()
 
 
-class CodeViewSet(OrganizationMembershipPermissionMixin, viewsets.ModelViewSet):
+class OrganizationViewSet(OrganizationMembershipPermissionMixin, viewsets.ModelViewSet):
 
     permissions = (permissions.IsAuthenticated,)
     serializer_class = serializers.OrganizationSerializer
     queryset = models.Organization.objects.all()
 
 
-router.register('organization', viewset=CodeViewSet)
+router.register('organization', viewset=OrganizationViewSet)

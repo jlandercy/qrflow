@@ -15,6 +15,13 @@ from flow.permissions import ApplicationPermissionMixin
 router = routers.SimpleRouter()
 
 
+class ApplicationViewSet(ApplicationPermissionMixin, viewsets.ModelViewSet):
+
+    permissions = (permissions.IsAuthenticated,)
+    serializer_class = serializers.ApplicationSerializer
+    queryset = models.Application.objects.all()
+
+
 class CodeViewSet(ApplicationPermissionMixin, viewsets.ModelViewSet):
 
     permissions = (permissions.IsAuthenticated,)
@@ -22,4 +29,5 @@ class CodeViewSet(ApplicationPermissionMixin, viewsets.ModelViewSet):
     queryset = models.Code.objects.all()
 
 
+router.register('application', viewset=ApplicationViewSet)
 router.register('code', viewset=CodeViewSet)
