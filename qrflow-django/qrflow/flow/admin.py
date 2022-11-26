@@ -1,23 +1,13 @@
 from django.contrib import admin
 from django.utils.html import mark_safe, format_html
 
-from core.admin import OrganizationAdminMixin
+from core.admin import OrganizationPermissionMixin
+from flow.permissions import ApplicationPermissionMixin
 from flow import models
 
 
-class ApplicationAdminMixin:
-
-    def get_queryset(self, request):
-        query = super().get_queryset(request)
-        if request.user.is_superuser:
-            return query
-        return query.filter(
-            application__organization__in=request.user.organization_set.all()
-        )
-
-
 @admin.register(models.Application)
-class ApplicationAdmin(OrganizationAdminMixin, admin.ModelAdmin):
+class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
     def _target_url(self, obj):
         return format_html("<a href='{url}'>{url}</a>", url=obj.target)
@@ -30,7 +20,7 @@ class ApplicationAdmin(OrganizationAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(models.Code)
-class CodeAdmin(ApplicationAdminMixin, admin.ModelAdmin):
+class CodeAdmin(ApplicationPermissionMixin, admin.ModelAdmin):
 
     def _base64(self, obj):
         return obj.base64[:128]

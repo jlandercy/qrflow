@@ -3,43 +3,16 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 
 from core import models
-
-
-class OrganizationAdminMixin:
-
-    def get_queryset(self, request):
-        query = super().get_queryset(request)
-        if request.user.is_superuser:
-            return query
-        return query.filter(
-            organization__in=request.user.organization_set.all()
-        )
-
-
-class OrganizationMembershipAdminMixin:
-
-    def get_queryset(self, request):
-        query = super().get_queryset(request)
-        if request.user.is_superuser:
-            return query
-        return query.filter(
-            organizationmembership__in=request.user.organizationmembership_set.all()
-        )
+from core.permissions import NoPermissionMixin, OrganizationPermissionMixin, OrganizationMembershipPermissionMixin
 
 
 @admin.register(models.CustomUser)
-class CustomUserAdmin(OrganizationMembershipAdminMixin, UserAdmin):
+class CustomUserAdmin(OrganizationMembershipPermissionMixin, UserAdmin):
     pass
 
 
 @admin.register(Session)
-class SessionAdmin(admin.ModelAdmin):
-
-    def get_queryset(self, request):
-        query = super().get_queryset(request)
-        if request.user.is_superuser:
-            return query
-        return query.none()
+class SessionAdmin(NoPermissionMixin, admin.ModelAdmin):
 
     def _user(self, obj):
         session_user = obj.get_decoded().get('_auth_user_id')
@@ -56,7 +29,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Organization)
-class OrganizationAdmin(OrganizationMembershipAdminMixin, admin.ModelAdmin):
+class OrganizationAdmin(OrganizationMembershipPermissionMixin, admin.ModelAdmin):
 
     def _users(self, obj):
         return ", ".join([item.username for item in obj.users.all()])
@@ -65,5 +38,5 @@ class OrganizationAdmin(OrganizationMembershipAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(models.OrganizationMembership)
-class OrganizationMembershipAdmin(OrganizationAdminMixin, admin.ModelAdmin):
+class OrganizationMembershipAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
     list_display = ('id', 'user', 'organization')
