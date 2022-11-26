@@ -4,16 +4,53 @@
     {% load static %}
     <div class="row col-sm-12 p-2">
         <h3 class="page-header">
-            <i class="bi bi-upc"></i> {{ object.application.name }}
+            <i class="bi bi-upc"></i>
+            <a href="{% url 'flow:application-detail' object.application.id %}">{{ object.application.name }}</a>
             <i class="bi bi-chevron-compact-right"></i>
             {{ object.name }}
         </h3>
     </div>
 
     <div class="row col-sm-12 p-2">
-        <p>
-            <img src="{{ object.image.url }}" width="100px;" />
-        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Key</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Organization</th>
+                    <td>
+                        {{ object.application.organization.name }}
+                        (<code>{{ object.application.organization.id }}</code>)
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Application</th>
+                    <td>
+                        {{ object.application.name }}
+                        (<code>{{ object.application.id }}</code>)
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Code</th>
+                    <td>
+                        {{ object.name }}
+                        (<code>{{ object.id }}</code>)
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Image</th>
+                    <td><img src="{{ object.image.url }}" /></td>
+                </tr>
+                <tr>
+                    <th scope="row">Payload</th>
+                    <td><pre>{{ object.payload }}</pre></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}
