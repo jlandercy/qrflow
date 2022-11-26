@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'django_extensions',
     # Project:
     'core',
     'pki',
@@ -146,7 +147,7 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "https://landercy.be"]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL = "profile"
 LOGOUT_REDIRECT_URL = "index"
 
 

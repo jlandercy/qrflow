@@ -46,7 +46,7 @@
                             <li class="nav-item"><a class="nav-link" href="{% url 'flow:application-list' %}"><i class="bi bi-app"></i> Applications</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'schema-swagger-ui' %}"><i class="bi bi-book"></i> Docs</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-cpu"></i> Admin</a></li>
-                            <li class="nav-item"><a class="nav-link" href=""><i class="bi bi-person-circle"></i> Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle"></i> Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'account:logout' %}"><i class="bi bi-x-circle"></i> Logout</a></li>
                             {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'account:login' %}"><i class="bi bi-check2-circle"></i> Login</a></li>
