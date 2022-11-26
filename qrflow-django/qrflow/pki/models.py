@@ -31,9 +31,7 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
         with self.public_key.open("rb") as handler:
             return x509.load_pem_x509_certificate(handler.read()).subject.rfc4514_string()
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
+    def save(self, *args, **kwargs):
 
         if not(self.public_key and self.private_key):
 
@@ -50,4 +48,4 @@ class Certificate(BaseAbstractModel, OwnershipAbstractModel):
                 private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None
             )
 
-        super().save()
+        super().save(*args, **kwargs)

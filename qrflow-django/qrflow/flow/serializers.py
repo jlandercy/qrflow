@@ -15,7 +15,7 @@ class CodeSerializer(serializers.ModelSerializer):
     def get_base64(self, obj):
         return obj.base64
 
-    organization = serializers.UUIDField(source='application.organization.id')
+    organization = serializers.UUIDField(source='application.organization.id', required=False)
     base64 = serializers.SerializerMethodField()
 
     class Meta:

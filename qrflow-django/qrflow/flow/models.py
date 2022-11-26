@@ -34,7 +34,7 @@ class Code(BaseAbstractModel):
     def base64(self):
         return "data:image/png;base64, %s" % base64.b64encode(self.image.read()).decode()
 
-    def save(self):
+    def save(self, *args, **kwargs):
 
         if "payload" in self.payload:
             image = QRCodeHelper.render(self.payload["payload"])
@@ -42,4 +42,4 @@ class Code(BaseAbstractModel):
             image = QRCodeHelper.render(self.payload)
         self.image = InMemoryUploadedFile(image, 'ImageField', 'qrcode.png', 'PNG', image.getbuffer().nbytes, None)
 
-        super().save()
+        super().save(*args, **kwargs)

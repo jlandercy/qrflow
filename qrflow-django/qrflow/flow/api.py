@@ -9,13 +9,14 @@ from rest_framework import permissions
 
 from flow import models
 from flow import serializers
+from core.permissions import OrganizationPermissionMixin
 from flow.permissions import ApplicationPermissionMixin
 
 
 router = routers.SimpleRouter()
 
 
-class ApplicationViewSet(ApplicationPermissionMixin, viewsets.ModelViewSet):
+class ApplicationViewSet(OrganizationPermissionMixin, viewsets.ModelViewSet):
 
     permissions = (permissions.IsAuthenticated,)
     serializer_class = serializers.ApplicationSerializer
