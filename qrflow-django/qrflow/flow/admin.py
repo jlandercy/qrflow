@@ -31,3 +31,4 @@ class CodeAdmin(ApplicationPermissionMixin, admin.ModelAdmin):
     list_display = ('id', 'application', 'name', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
+    list_filter = ('application',)
