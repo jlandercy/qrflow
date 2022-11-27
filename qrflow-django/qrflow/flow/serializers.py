@@ -5,9 +5,11 @@ from flow import models
 
 class ApplicationSerializer(serializers.ModelSerializer):
 
+    has_permissions = serializers.BooleanField(source='check_permissions', read_only=True)
+
     class Meta:
         model = models.Application
-        fields = ('id', 'name', 'organization')
+        fields = ('id', 'name', 'organization', 'has_permissions')
 
 
 class CodeSerializer(serializers.ModelSerializer):

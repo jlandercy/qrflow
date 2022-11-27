@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from flow import models
 from core.permissions import OrganizationPermissionMixin
+from flow.permissions import ApplicationPermissionMixin
 
 
 class ApplicationListView(OrganizationPermissionMixin, ListView):
@@ -14,7 +15,7 @@ class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
 
-class CodeDetailView(DetailView):
+class CodeDetailView(ApplicationPermissionMixin, DetailView):
     model = models.Code
 
 

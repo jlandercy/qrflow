@@ -10,7 +10,7 @@ from rest_framework import permissions
 from flow import models
 from flow import serializers
 from core.permissions import OrganizationPermissionMixin
-from flow.permissions import ApplicationPermissionMixin
+from flow.permissions import ApplicationPermissionMixin, CodePermission
 
 
 router = routers.SimpleRouter()
@@ -25,7 +25,7 @@ class ApplicationViewSet(OrganizationPermissionMixin, viewsets.ModelViewSet):
 
 class CodeViewSet(ApplicationPermissionMixin, viewsets.ModelViewSet):
 
-    permissions = (permissions.IsAuthenticated,)
+    permissions = (permissions.IsAuthenticated, CodePermission,)
     serializer_class = serializers.CodeSerializer
     queryset = models.Code.objects.all()
 

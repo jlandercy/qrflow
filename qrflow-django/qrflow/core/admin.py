@@ -8,7 +8,7 @@ from core.permissions import NoPermissionMixin, OrganizationPermissionMixin, Org
 
 @admin.register(models.CustomUser)
 class CustomUserAdmin(OrganizationMembershipPermissionMixin, UserAdmin):
-    pass
+    __metaclass__ = UserAdmin
 
 
 @admin.register(Session)

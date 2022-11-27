@@ -1,8 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.exceptions import SuspiciousOperation
 
+from rest_framework import permissions
 
-class NoPermissionMixin(LoginRequiredMixin):
+
+class BasePermissionMixin(LoginRequiredMixin, object):
+    pass
+
+
+class NoPermissionMixin(BasePermissionMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
@@ -12,7 +18,7 @@ class NoPermissionMixin(LoginRequiredMixin):
         return query.none()
 
 
-class OrganizationPermissionMixin(LoginRequiredMixin, UserPassesTestMixin):
+class OrganizationPermissionMixin(BasePermissionMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
@@ -23,17 +29,8 @@ class OrganizationPermissionMixin(LoginRequiredMixin, UserPassesTestMixin):
             organization__in=request.user.organization_set.all()
         )
 
-    def test_func(self):
-        print(self)
-        print(type(self))
-        # MRO Will be the reason why!!!!
-        return False
 
-    def handle_no_permission(self):
-        raise SuspiciousOperation("Go away Ana!")
-
-
-class OrganizationMembershipPermissionMixin(LoginRequiredMixin):
+class OrganizationMembershipPermissionMixin(BasePermissionMixin):
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
