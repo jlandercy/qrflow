@@ -45,12 +45,6 @@ class EchoAPIView(views.APIView):
         })
 
 
-class QRCodeAPIView(generics.GenericAPIView):
-
-    def get(self, request, format=None):
-        return Response({})
-
-
 router.register('application', viewset=ApplicationViewSet)
 router.register('code', viewset=CodeViewSet)
 
