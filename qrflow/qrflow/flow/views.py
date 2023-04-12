@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from organizations.views.mixins import MembershipRequiredMixin, OrganizationMixin
+
 from flow import models
 
 

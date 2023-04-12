@@ -11,10 +11,10 @@
     </div>
 
     <div class="row col-sm-12 p-2">
-        {% for object in object.code_set.all %}
-        <a href="{% url 'flow:code-detail' object.id %}" class="col-sm-2 text-center">
-            <img src="{{ object.image.url }}" width="100px;" />
-            <h5>{{ object.name }}</h5>
+        {% for item in object.codes.all %}
+        <a href="{% url 'flow:code-detail' item.id %}" class="col-sm-2 text-center">
+            <img src="{{ item.image.url }}" width="100px;" />
+            <h5>{{ item.name }}</h5>
         </a>
         {% endfor %}
     </div>
