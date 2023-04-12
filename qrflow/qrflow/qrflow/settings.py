@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'django_extensions',
+    'dbbackup',
     # Project:
     'core',
     'pki',
@@ -210,6 +211,21 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+
+# https://django-dbbackup.readthedocs.io/en/master/installation.html
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+DBBACKUP_STORAGE_OPTIONS = {
+    'location': MEDIA_ROOT / 'backup'
+}
+
+DBBACKUP_CONNECTORS = {
+    'default': {
+        'CONNECTOR': 'dbbackup.db.postgresql.PgDumpBinaryConnector',
+        'SINGLE_TRANSACTION': False
+    }
 }
 
 

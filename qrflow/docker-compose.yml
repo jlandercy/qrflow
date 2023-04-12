@@ -2,17 +2,17 @@ version: "3.6"
 
 services:
 
-  olimat-database:
+  qrflow-database:
     image: postgres:13-alpine
     restart: unless-stopped
     env_file:
       - ../secrets/qrflow-database.env
     environment:
-      #- POSTGRES_PASSWORD=olimat
+      #- POSTGRES_PASSWORD=qrflow
       - POSTGRES_USER=qrflow
       - POSTGRES_DB=qrflow
     healthcheck:
-      test: ["CMD", "pg_isready", "--dbname=jupyterhub", "--username=qrflow"]
+      test: ["CMD", "pg_isready", "--dbname=qrflow", "--username=qrflow"]
       interval: 5s
       timeout: 2s
       retries: 5
@@ -30,6 +30,15 @@ services:
     env_file:
       - ../secrets/qrflow.env
     environment:
+      # HTTP server settings:
+      - "HTTP_WORKERS=5"
+      - "HTTP_THREADS=10"
+      - "HTTP_MAX_REQUESTS=50"
+      - "HTTP_MAX_REQUESTS_JITTER=5"
+      - "HTTP_TIMEOUT=30"
+      - "HTTP_LOGLEVEL=info"
+      # Application settings:
+      - "DJANGO_SETTINGS_MODULE=qrflow.settings"
       - "APP_DEBUG_MODE=0"
       - "APP_URL_PREFIX=qrflow/"
       - "APP_ALLOWED_HOST=landercy.be"
@@ -40,10 +49,10 @@ services:
       - "APP_STATIC_ROOT=/home/qrflow/static"
       - "APP_MEDIA_ROOT=/home/qrflow/media"
     volumes:
-      #- /datadrive/qrflow/static:/home/qrflow/static
-      #- /datadrive/qrflow/media:/home/qrflow/media
-      - qrflow-static:/home/qrflow/static
-      - qrflow-media:/home/qrflow/media
+      - /home/ubuntu/qrflow/static:/home/qrflow/static
+      - /home/ubuntu/qrflow/media:/home/qrflow/media
+#      - qrflow-static:/home/qrflow/static
+#      - qrflow-media:/home/qrflow/media
     networks:
       - backend
     labels:
@@ -66,5 +75,5 @@ networks:
 
 volumes:
   qrflow-database:
-  qrflow-static:
-  qrflow-media:
+#  qrflow-static:
+#  qrflow-media:
