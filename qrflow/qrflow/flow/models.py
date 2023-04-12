@@ -5,14 +5,13 @@ from django.db import models
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-from core.models import AbstractBaseModel
+from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow.helpers import QRCodeHelper
 
 
-class Application(AbstractBaseModel):
+class Application(AbstractBaseModel, AbstractOwnershipModel):
 
     name = models.CharField(max_length=128, unique=True)
-    # Integration + Credentials
     target = models.URLField()
 
 

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # Project:
     'core',
     'pki',
-    #'flow',
+    'flow',
 ]
 
 MIDDLEWARE = [

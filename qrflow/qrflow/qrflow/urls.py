@@ -15,7 +15,7 @@ from organizations.backends import invitation_backend
 
 from qrflow import views, __version__
 from core.api import router as core_api
-#from flow.api import router as flow_api
+from flow.api import router as flow_api
 
 
 schema_view = get_schema_view(
@@ -53,7 +53,7 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token-verify'),
     path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token-blacklist'),
     path('api/core/', include((core_api.urls, 'core-api'), namespace="core-api")),
-    #path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
+    path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
 
     # DRF+Swagger:
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
@@ -62,8 +62,8 @@ urlpatterns = [
 
     # Applications:
     path('core/', include('core.urls', namespace="core")),
-    #path('pki/', include('pki.urls', namespace="pki")),
-    #path('flow/', include('flow.urls', namespace="flow")),
+    path('pki/', include('pki.urls', namespace="pki")),
+    path('flow/', include('flow.urls', namespace="flow")),
 
     # Home:
     path('', views.ProjectHomeView.as_view(), name='index'),

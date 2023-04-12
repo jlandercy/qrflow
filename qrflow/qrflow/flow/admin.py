@@ -13,7 +13,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     def _code_count(self, obj):
         return obj.code_set.count()
 
-    list_display = ('id', 'organization', 'owner', 'name', '_target_url', '_code_count')
+    list_display = ('id', 'organization', 'name', '_target_url', '_code_count')
     search_fields = ('id', 'organization__id', 'organization__name', 'name')
 
 

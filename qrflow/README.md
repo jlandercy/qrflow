@@ -1,2 +1,0 @@
-# QRFlow + Django
-
