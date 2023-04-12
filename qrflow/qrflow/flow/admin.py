@@ -11,15 +11,20 @@ class ApplicationAdmin(admin.ModelAdmin):
         return obj.code_count
     _code_count.admin_order_field = 'code_count'
 
-    list_display = ('id', 'organization', 'name', 'domain', '_code_count')
+    def _endpoint_count(self, obj):
+        return obj.endpoint_count
+    _code_count.admin_order_field = 'endpoint_count'
+
+    list_display = ('id', 'organization', 'name', 'domain', '_code_count', '_endpoint_count')
     search_fields = ('id', 'organization__id', 'organization__name', 'domain')
 
 
 @admin.register(models.Endpoint)
 class EndpointAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'application', 'name', 'target')
-    search_fields = ('id', 'application__id', 'application__name', 'name', 'target')
+    list_display = ('id', 'application', 'name', 'method', 'target', 'parameters')
+    search_fields = ('id', 'application__id', 'application__name', 'name', 'method', 'target')
+    list_filter = ('application',)
 
 
 @admin.register(models.Code)

@@ -6,6 +6,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+from qrflow import constants
 from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow import managers
 from flow.helpers import QRCodeHelper
@@ -20,12 +21,16 @@ class Application(AbstractBaseModel, AbstractOwnershipModel):
 
 class Endpoint(AbstractBaseModel):
 
-    application = models.ForeignKey(Application, on_delete=models.RESTRICT, help_text="Endpoint's application")
+    application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="endpoints", help_text="Endpoint's application")
     name = models.CharField(max_length=128, unique=True)
+    method = models.CharField(max_length=8, choices=constants.HTTP_METHODS, default='GET', help_text="HTTP method to contact the endpoint")
     target = models.URLField(help_text="Endpoint target URL (raw or template)")
+    parameters = models.JSONField(blank=True, default=dict, help_text="Specific parameters to contact the endpoint (excluded credentials)")
 
     def clean(self):
         url = urlparse(self.target)
+        if url.scheme == 'http':
+            raise ValidationError("Endpoint must be over HTTPS.")
         if url.hostname != self.application.domain:
             raise ValidationError(
                 'Application endpoint %s must belong to application domain %s' %

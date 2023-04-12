@@ -5,7 +5,8 @@ from django.db.models import F, Count
 class ApplicationManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().annotate(
-            code_count=Count(F("codes__id"), distinct=True)
+            code_count=Count(F("codes__id"), distinct=True),
+            endpoint_count=Count(F("endpoints__id"), distinct=True)
         )
 
 
