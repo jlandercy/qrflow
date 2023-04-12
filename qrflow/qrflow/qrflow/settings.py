@@ -128,7 +128,7 @@ URL_PREFIX = os.getenv("APP_URL_PREFIX", "")
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = URL_PREFIX + 'static/'
-STATIC_ROOT = os.getenv("APP_STATIC_ROOT", BASE_DIR / 'static')
+STATIC_ROOT = os.getenv("APP_STATIC_ROOT", BASE_DIR.parent.parent / 'static')
 
 STATICFILES_DIRS = [
     BASE_DIR / 'qrflow/static'

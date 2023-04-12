@@ -45,7 +45,7 @@ docReady(function() {
                 dataType: "json",
             }).done(function(data) {
                 console.log(data);
-                scannedContainer.innerHTML = escape(JSON.stringify(data["result"], null, 2));
+                scannedContainer.innerHTML = escape(JSON.stringify(data, null, 2));
             });
 
         }

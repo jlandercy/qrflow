@@ -53,8 +53,8 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token-verify'),
     path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token-blacklist'),
     path('api/core/', include((core_api.urls, 'core-api'), namespace="core-api")),
-    path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
-    path('api/flow/', include('flow.api', "flow--api")),
+    path('api/flow/', include((flow_api.urls, 'flow-api-model'), namespace="flow-api-model")),
+    path('api/flow/', include('flow.api', "flow-api")),
 
     # DRF+Swagger:
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

@@ -2,6 +2,7 @@ from django.urls import path, include
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
+from rest_framework import views
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import routers
@@ -29,10 +30,19 @@ class CodeViewSet(viewsets.ModelViewSet):
     queryset = models.Code.objects.all()
 
 
-class SinkAPIView(generics.GenericAPIView):
+class EchoAPIView(views.APIView):
+
+    authentication_classes = tuple()
+    permission_classes = tuple()
 
     def get(self, request, format=None):
-        return Response({})
+        return Response({"parameters": request.GET.dict()})
+
+    def post(self, request, format=None):
+        return Response({
+            "parameters": request.POST.dict(),
+            "body": request.data
+        })
 
 
 class QRCodeAPIView(generics.GenericAPIView):
@@ -45,5 +55,5 @@ router.register('application', viewset=ApplicationViewSet)
 router.register('code', viewset=CodeViewSet)
 
 urlpatterns = [
-    path(r"code/sink/", SinkAPIView.as_view(), name="code-sink"),
+    path("echo/", EchoAPIView.as_view(), name="echo"),
 ]
