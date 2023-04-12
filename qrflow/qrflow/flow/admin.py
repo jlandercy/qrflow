@@ -7,14 +7,19 @@ from flow import models
 @admin.register(models.Application)
 class ApplicationAdmin(admin.ModelAdmin):
 
-    def _target_url(self, obj):
-        return format_html("<a href='{url}'>{url}</a>", url=obj.target)
-
     def _code_count(self, obj):
-        return obj.code_set.count()
+        return obj.code_count
+    _code_count.admin_order_field = 'code_count'
 
-    list_display = ('id', 'organization', 'name', '_target_url', '_code_count')
-    search_fields = ('id', 'organization__id', 'organization__name', 'name')
+    list_display = ('id', 'organization', 'name', 'domain', '_code_count')
+    search_fields = ('id', 'organization__id', 'organization__name', 'domain')
+
+
+@admin.register(models.Endpoint)
+class EndpointAdmin(admin.ModelAdmin):
+
+    list_display = ('id', 'application', 'name', 'target')
+    search_fields = ('id', 'application__id', 'application__name', 'name', 'target')
 
 
 @admin.register(models.Code)
