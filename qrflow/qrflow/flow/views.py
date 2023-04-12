@@ -3,19 +3,17 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from flow import models
-from core.permissions import OrganizationPermissionMixin
-from flow.permissions import ApplicationPermissionMixin
 
 
-class ApplicationListView(OrganizationPermissionMixin, ListView):
+class ApplicationListView(ListView):
     model = models.Application
 
 
-class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
+class ApplicationDetailView(DetailView):
     model = models.Application
 
 
-class CodeDetailView(ApplicationPermissionMixin, DetailView):
+class CodeDetailView(DetailView):
     model = models.Code
 
 

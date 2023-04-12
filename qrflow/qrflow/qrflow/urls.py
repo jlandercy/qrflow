@@ -11,9 +11,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from organizations.backends import invitation_backend
+
 from qrflow import views, __version__
 from core.api import router as core_api
-from flow.api import router as flow_api
+#from flow.api import router as flow_api
 
 
 schema_view = get_schema_view(
@@ -38,8 +40,10 @@ urlpatterns = [
 
     # Admin & Accounts:
     path('admin/', admin.site.urls),
-    path('accounts/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
-    path("accounts/profile/", views.ProfileView.as_view(), name="profile"),
+    path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
+    path('account/', include(('organizations.urls', 'account-organization'), namespace='account-organization')),
+    path('account/invitation/', include((invitation_backend().get_urls(), 'account-invitation'), namespace='account-invitation')),
+    path("account/profile/", views.ProfileView.as_view(), name="profile"),
 
     # API (DRF):
     #path('api-auth/', include('rest_framework.urls')),
@@ -49,7 +53,7 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token-verify'),
     path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token-blacklist'),
     path('api/core/', include((core_api.urls, 'core-api'), namespace="core-api")),
-    path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
+    #path('api/flow/', include((flow_api.urls, 'flow-api'), namespace="flow-api")),
 
     # DRF+Swagger:
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
@@ -58,8 +62,8 @@ urlpatterns = [
 
     # Applications:
     path('core/', include('core.urls', namespace="core")),
-    path('pki/', include('pki.urls', namespace="pki")),
-    path('flow/', include('flow.urls', namespace="flow")),
+    #path('pki/', include('pki.urls', namespace="pki")),
+    #path('flow/', include('flow.urls', namespace="flow")),
 
     # Home:
     path('', views.ProjectHomeView.as_view(), name='index'),

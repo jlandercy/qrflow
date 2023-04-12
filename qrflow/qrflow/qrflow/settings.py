@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Third parties:
+    'organizations',
     'bootstrap5',
     'crispy_forms',
     "crispy_bootstrap5",
@@ -39,8 +40,8 @@ INSTALLED_APPS = [
     'django_extensions',
     # Project:
     'core',
-    'pki',
-    'flow',
+    #'pki',
+    #'flow',
 ]
 
 MIDDLEWARE = [
@@ -210,3 +211,8 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+
+# https://django-organizations.readthedocs.io/en/latest/getting_started.html
+# INVITATION_BACKEND = 'myapp.backends.MyInvitationBackend'
+# REGISTRATION_BACKEND = 'myapp.backends.MyRegistrationBackend'

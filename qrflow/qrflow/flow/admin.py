@@ -1,13 +1,11 @@
 from django.contrib import admin
 from django.utils.html import mark_safe, format_html
 
-from core.admin import OrganizationPermissionMixin
-from flow.permissions import ApplicationPermissionMixin
 from flow import models
 
 
 @admin.register(models.Application)
-class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
+class ApplicationAdmin(admin.ModelAdmin):
 
     def _target_url(self, obj):
         return format_html("<a href='{url}'>{url}</a>", url=obj.target)
@@ -20,7 +18,7 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
 
 @admin.register(models.Code)
-class CodeAdmin(ApplicationPermissionMixin, admin.ModelAdmin):
+class CodeAdmin(admin.ModelAdmin):
 
     def _base64(self, obj):
         return obj.base64[:128]

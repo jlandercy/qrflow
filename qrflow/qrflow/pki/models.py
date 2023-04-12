@@ -5,11 +5,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from cryptography import x509
 
-from core.models import BaseAbstractModel, OwnershipAbstractModel
+from core.models import BaseAbstractModel
 from pki.helpers import CertificateHelper
 
 
-class Certificate(BaseAbstractModel, OwnershipAbstractModel):
+class Certificate(BaseAbstractModel):
 
     def organization_public_path(self, filename):
         return "organizations/{}/certificates/public/{}".format(self.organization.id.hex, self.id.hex + ".crt")
