@@ -5,18 +5,18 @@ from django.db import models
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-from core.models import BaseAbstractModel
+from core.models import AbstractBaseModel
 from flow.helpers import QRCodeHelper
 
 
-class Application(BaseAbstractModel):
+class Application(AbstractBaseModel):
 
     name = models.CharField(max_length=128, unique=True)
     # Integration + Credentials
     target = models.URLField()
 
 
-class Code(BaseAbstractModel):
+class Code(AbstractBaseModel):
 
     class Meta:
         ordering = ("zorder", "name")

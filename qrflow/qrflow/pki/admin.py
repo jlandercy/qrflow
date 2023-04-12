@@ -12,5 +12,5 @@ class CertificateAdmin(admin.ModelAdmin):
     def _subject(self, obj):
         return obj.subject
 
-    list_display = ('id', 'organization', 'owner', 'name', '_signature', '_subject', 'public_key', 'private_key')
+    list_display = ('id', 'organization', 'name', '_signature', '_subject', 'public_key', 'private_key')
 

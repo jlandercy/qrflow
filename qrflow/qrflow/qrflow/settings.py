@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     # Project:
     'core',
-    #'pki',
+    'pki',
     #'flow',
 ]
 

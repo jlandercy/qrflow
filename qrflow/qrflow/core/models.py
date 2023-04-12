@@ -3,8 +3,15 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from organizations.abstract import (
+    AbstractOrganization,
+    AbstractOrganizationUser,
+    AbstractOrganizationOwner,
+    AbstractOrganizationInvitation,
+)
 
-class BaseAbstractModel(models.Model):
+
+class AbstractBaseModel(models.Model):
 
     class Meta:
         abstract = True
@@ -28,10 +35,35 @@ class BaseAbstractModel(models.Model):
             return self.id
 
 
-class CustomUser(AbstractUser, BaseAbstractModel):
+class CustomUser(AbstractUser, AbstractBaseModel):
 
     def __str__(self):
         return self.username
+
+
+class Organization(AbstractOrganization, AbstractBaseModel):
+    pass
+
+
+class OrganizationUser(AbstractOrganizationUser, AbstractBaseModel):
+    pass
+
+
+class OrganizationOwner(AbstractOrganizationOwner, AbstractBaseModel):
+    pass
+
+
+class OrganizationInvitation(AbstractOrganizationInvitation, AbstractBaseModel):
+    pass
+
+
+class AbstractOwnershipModel(models.Model):
+
+    class Meta:
+        abstract = True
+
+    organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
+
 
 #
 # class Organization(BaseAbstractModel):

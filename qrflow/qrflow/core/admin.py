@@ -2,6 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 
+import organizations.models as organizations_models
+import organizations.admin as organizations_admin
+
+
 from core import models
 
 
@@ -26,6 +30,32 @@ class SessionAdmin(admin.ModelAdmin):
     readonly_fields = ('_session_data',)
     exclude = ('session_data',)
     date_hierarchy = 'expire_date'
+
+
+@admin.register(models.Organization)
+class OrganizationAdmin(organizations_admin.BaseOrganizationAdmin):
+    pass
+
+
+@admin.register(models.OrganizationOwner)
+class OrganizationOwnerAdmin(organizations_admin.BaseOrganizationOwnerAdmin):
+    pass
+
+
+@admin.register(models.OrganizationUser)
+class OrganizationUserAdmin(organizations_admin.BaseOrganizationUserAdmin):
+    pass
+
+
+@admin.register(models.OrganizationInvitation)
+class OrganizationInvitationAdmin(organizations_admin.OrganizationInvitationAdmin):
+    pass
+
+
+admin.site.unregister(organizations_models.Organization)
+admin.site.unregister(organizations_models.OrganizationUser)
+admin.site.unregister(organizations_models.OrganizationOwner)
+admin.site.unregister(organizations_models.OrganizationInvitation)
 
 #
 # @admin.register(models.Organization)
