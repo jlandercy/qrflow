@@ -1,6 +1,5 @@
+from django.urls import path, include
 from django.shortcuts import get_object_or_404
-
-#from myapps.serializers import UserSerializer
 
 from rest_framework import generics
 from rest_framework import viewsets
@@ -11,6 +10,8 @@ from rest_framework import permissions
 from flow import models
 from flow import serializers
 
+
+app_name = 'flow'
 router = routers.SimpleRouter()
 
 
@@ -28,6 +29,12 @@ class CodeViewSet(viewsets.ModelViewSet):
     queryset = models.Code.objects.all()
 
 
+class SinkAPIView(generics.GenericAPIView):
+
+    def get(self, request, format=None):
+        return Response({})
+
+
 class QRCodeAPIView(generics.GenericAPIView):
 
     def get(self, request, format=None):
@@ -36,4 +43,7 @@ class QRCodeAPIView(generics.GenericAPIView):
 
 router.register('application', viewset=ApplicationViewSet)
 router.register('code', viewset=CodeViewSet)
-#router.register('code/generate', QRCodeAPIView.as_view(), basename='code_generate')
+
+urlpatterns = [
+    path(r"code/sink/", SinkAPIView.as_view(), name="code-sink"),
+]
