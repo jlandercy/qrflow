@@ -1,5 +1,6 @@
 import io
 import base64
+import os
 from urllib.parse import urlparse
 
 from django.db import models
@@ -63,7 +64,7 @@ class Code(AbstractBaseModel):
     application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="codes")
     endpoint = models.ForeignKey(Endpoint, on_delete=models.RESTRICT, related_name="codes", null=True, blank=True)
     name = models.CharField(max_length=256, unique=False)
-    payload = models.JSONField()
+    payload = models.JSONField(default=dict, null=True)
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
     zorder = models.IntegerField(default=0)
 
@@ -77,6 +78,10 @@ class Code(AbstractBaseModel):
             image = QRCodeHelper.render(self.payload["payload"])
         else:
             image = QRCodeHelper.render(self.payload)
+
+        if self.image:
+            self.image.storage.delete(self.image.path)
+
         self.image = InMemoryUploadedFile(image, 'ImageField', 'qrcode.png', 'PNG', image.getbuffer().nbytes, None)
 
         super().save(*args, **kwargs)

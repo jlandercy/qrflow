@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_extensions',
     'dbbackup',
+    'django_cleanup.apps.CleanupConfig',
     # Project:
     'core',
     'pki',
