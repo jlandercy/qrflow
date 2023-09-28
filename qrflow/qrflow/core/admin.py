@@ -52,10 +52,10 @@ class OrganizationInvitationAdmin(organizations_admin.OrganizationInvitationAdmi
     pass
 
 
-admin.site.unregister(organizations_models.Organization)
-admin.site.unregister(organizations_models.OrganizationUser)
-admin.site.unregister(organizations_models.OrganizationOwner)
-admin.site.unregister(organizations_models.OrganizationInvitation)
+# admin.site.unregister(organizations_models.Organization)
+# admin.site.unregister(organizations_models.OrganizationUser)
+# admin.site.unregister(organizations_models.OrganizationOwner)
+# admin.site.unregister(organizations_models.OrganizationInvitation)
 
 #
 # @admin.register(models.Organization)

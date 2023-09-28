@@ -7,11 +7,11 @@ from organizations.views.mixins import MembershipRequiredMixin, OrganizationMixi
 from flow import models
 
 
-class ApplicationListView(ListView):
+class ApplicationListView(LoginRequiredMixin, ListView):
     model = models.Application
 
 
-class ApplicationDetailView(DetailView):
+class ApplicationDetailView(LoginRequiredMixin, DetailView):
     model = models.Application
 
 
