@@ -36,10 +36,11 @@ class Endpoint(AbstractBaseModel):
     parameters = models.JSONField(blank=True, default=dict, help_text="Specific parameters to contact the endpoint (excluded credentials)")
 
     def clean(self):
-        url = urlparse(self.target)
-        if url.scheme == 'http':
-            raise ValidationError("Endpoint must be over HTTPS.")
-        if url.hostname != self.application.domain:
+        target = urlparse(self.target)
+        domain = urlparse(self.application.domain)
+        if target.scheme != domain.scheme:
+            raise ValidationError("Endpoint scheme must match.")
+        if target.hostname != domain.hostname:
             raise ValidationError(
                 'Application endpoint %s must belong to application domain %s' %
                 (self.target, self.application.domain)
@@ -60,6 +61,7 @@ class Code(AbstractBaseModel):
         )
 
     application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="codes")
+    endpoint = models.ForeignKey(Endpoint, on_delete=models.RESTRICT, related_name="codes", null=True, blank=True)
     name = models.CharField(max_length=256, unique=False)
     payload = models.JSONField()
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
