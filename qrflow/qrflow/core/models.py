@@ -3,13 +3,6 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from organizations.abstract import (
-    AbstractOrganization,
-    AbstractOrganizationUser,
-    AbstractOrganizationOwner,
-    AbstractOrganizationInvitation,
-)
-
 
 class AbstractBaseModel(models.Model):
 
@@ -41,20 +34,9 @@ class CustomUser(AbstractUser, AbstractBaseModel):
         return self.username
 
 
-class Organization(AbstractOrganization, AbstractBaseModel):
-    pass
-
-
-class OrganizationUser(AbstractOrganizationUser, AbstractBaseModel):
-    pass
-
-
-class OrganizationOwner(AbstractOrganizationOwner, AbstractBaseModel):
-    pass
-
-
-class OrganizationInvitation(AbstractOrganizationInvitation, AbstractBaseModel):
-    pass
+class Organization(AbstractBaseModel):
+    name = models.CharField(max_length=128, unique=True)
+    users = models.ManyToManyField("CustomUser", through="OrganizationMembership")
 
 
 class AbstractOwnershipModel(models.Model):
@@ -65,26 +47,20 @@ class AbstractOwnershipModel(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
 
 
-#
-# class Organization(BaseAbstractModel):
-#     name = models.CharField(max_length=128, unique=True)
-#     users = models.ManyToManyField("CustomUser", through="OrganizationMembership")
-#
-#
-# class OrganizationMembership(BaseAbstractModel):
-#
-#     class Meta:
-#         unique_together = (('user', 'organization'),)
-#
-#     user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
-#     organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
-#
-#
-# class OwnershipAbstractModel(models.Model):
-#
-#     class Meta:
-#         abstract = True
-#
-#     organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
-#     owner = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
+class OrganizationMembership(AbstractBaseModel):
+
+    class Meta:
+        unique_together = (('user', 'organization'),)
+
+    user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
+    organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
+
+
+class OwnershipAbstractModel(models.Model):
+
+    class Meta:
+        abstract = True
+
+    organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)
+    owner = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
 

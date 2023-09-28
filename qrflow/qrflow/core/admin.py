@@ -2,9 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 
-import organizations.models as organizations_models
-import organizations.admin as organizations_admin
-
 
 from core import models
 
@@ -33,40 +30,14 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Organization)
-class OrganizationAdmin(organizations_admin.BaseOrganizationAdmin):
-    pass
+class OrganizationAdmin(admin.ModelAdmin):
+
+    def _users(self, obj):
+        return ", ".join([item.username for item in obj.users.all()])
+
+    list_display = ('id', 'name', '_users')
 
 
-@admin.register(models.OrganizationOwner)
-class OrganizationOwnerAdmin(organizations_admin.BaseOrganizationOwnerAdmin):
-    pass
-
-
-@admin.register(models.OrganizationUser)
-class OrganizationUserAdmin(organizations_admin.BaseOrganizationUserAdmin):
-    pass
-
-
-@admin.register(models.OrganizationInvitation)
-class OrganizationInvitationAdmin(organizations_admin.OrganizationInvitationAdmin):
-    pass
-
-
-# admin.site.unregister(organizations_models.Organization)
-# admin.site.unregister(organizations_models.OrganizationUser)
-# admin.site.unregister(organizations_models.OrganizationOwner)
-# admin.site.unregister(organizations_models.OrganizationInvitation)
-
-#
-# @admin.register(models.Organization)
-# class OrganizationAdmin(admin.ModelAdmin):
-#
-#     def _users(self, obj):
-#         return ", ".join([item.username for item in obj.users.all()])
-#
-#     list_display = ('id', 'name', '_users')
-#
-#
-# @admin.register(models.OrganizationMembership)
-# class OrganizationMembershipAdmin( admin.ModelAdmin):
-#     list_display = ('id', 'user', 'organization')
+@admin.register(models.OrganizationMembership)
+class OrganizationMembershipAdmin( admin.ModelAdmin):
+    list_display = ('id', 'user', 'organization')

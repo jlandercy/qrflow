@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Third parties:
-    'organizations',
     'bootstrap5',
     'crispy_forms',
     "crispy_bootstrap5",
@@ -153,7 +152,7 @@ LOGIN_REDIRECT_URL = "profile"
 LOGOUT_REDIRECT_URL = "index"
 
 
-AUTH_USER_MODEL = "core.CustomUser"  # new
+AUTH_USER_MODEL = "core.CustomUser"
 
 
 # https://www.django-rest-framework.org/api-guide/permissions/

@@ -11,8 +11,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from organizations.backends import invitation_backend
-
 from qrflow import views, __version__
 from core.api import router as core_api
 from flow.api import router as flow_api
@@ -41,8 +39,6 @@ urlpatterns = [
     # Admin & Accounts:
     path('admin/', admin.site.urls),
     path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
-    path('account/', include(('organizations.urls', 'account-organization'), namespace='account-organization')),
-    path('account/invitation/', include((invitation_backend().get_urls(), 'account-invitation'), namespace='account-invitation')),
     path("account/profile/", views.ProfileView.as_view(), name="profile"),
 
     # API (DRF):
