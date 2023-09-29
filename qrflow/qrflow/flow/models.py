@@ -37,6 +37,8 @@ class Endpoint(AbstractBaseModel):
     parameters = models.JSONField(blank=True, default=dict, help_text="Specific parameters to contact the endpoint (excluded credentials)")
 
     def clean(self):
+
+        # Check Endpoint URL compliance with domain:
         target = urlparse(self.target)
         domain = urlparse(self.application.domain)
         if target.scheme != domain.scheme:

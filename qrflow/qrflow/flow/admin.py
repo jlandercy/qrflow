@@ -17,7 +17,10 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
         return obj.endpoint_count
     _code_count.admin_order_field = 'endpoint_count'
 
-    list_display = ('id', 'organization', 'name', 'domain', '_code_count', '_endpoint_count')
+    def _domain(self, obj):
+        return mark_safe('<a href="{url:}" target="_blank">{url:}</a>'.format(url=obj.domain))
+
+    list_display = ('id', 'organization', 'name', '_domain', '_code_count', '_endpoint_count')
     search_fields = ('id', 'organization__id', 'organization__name', 'domain')
 
 
