@@ -7,16 +7,7 @@
     </div>
 
     <div class="row col-sm-12 p-2">
-        <h4 class="page-header"><i class="bi bi-diagram-3"></i> Organizations</h4>
-    </div>
-
-    <div class="row col-sm-12 p-2">
-        {% for object in user.organizations_organization.all %}
-        <a href="{% url 'core:organization-detail' object.id %}" class="col-sm-2 text-center">
-            <i class="bi bi-diagram-3" style="font-size: 50px;"></i>
-            <h5>{{ object.name }}</h5>
-        </a>
-        {% endfor %}
+        <a href="{% url 'core:organization-list' %}">Organizations</a>
     </div>
 
 {% endblock %}

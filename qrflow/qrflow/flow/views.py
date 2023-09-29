@@ -13,6 +13,11 @@ class ApplicationListView(OrganizationPermissionMixin, ListView):
 class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
+    def get(self, request, *args, **kwargs):
+        response = super().get(self, request, *args, **kwargs)
+        response.set_cookie("application", kwargs["pk"])
+        return response
+
 
 class CodeDetailView(RelatedOrganizationPermissionMixin, DetailView):
     related_organization_field = "application"
