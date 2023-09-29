@@ -27,6 +27,23 @@ class ApplicationScannerView(FormView):
     def get_success_url(self):
         return reverse('flow:application-scanner', kwargs={'pk': self.kwargs["pk"]})
 
+    def get_initial(self):
+        initial = super().get_initial()
+        application = models.Application.objects.get(pk=self.kwargs['pk'])
+        initial['organization'] = application.organization.id
+        initial['application'] = application.id
+        return initial
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     #context['object'] = models.Application.objects.get(pk=self.kwargs['pk'])
+    #     return context
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        print(data)
+        return super().form_valid(form)
+
 
 class CodeDetailView(RelatedOrganizationPermissionMixin, DetailView):
     related_organization_field = "application"
