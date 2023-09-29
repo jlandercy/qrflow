@@ -29,6 +29,11 @@ class OrganizationPermissionMixin(BasePermissionMixin):
             organization__in=request.user.organization_set.all()
         )
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['organization'].queryset = request.user.organization_set.all()
+        return form
+
 
 class RelatedOrganizationPermissionMixin(BasePermissionMixin):
 

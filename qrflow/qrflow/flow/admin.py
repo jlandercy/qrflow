@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import mark_safe, format_html
 
 from flow import models
+from core.models import Organization
 from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 
 
