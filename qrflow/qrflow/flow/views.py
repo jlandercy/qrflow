@@ -2,18 +2,20 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 from flow import models
 
 
-class ApplicationListView(LoginRequiredMixin, ListView):
+class ApplicationListView(OrganizationPermissionMixin, ListView):
     model = models.Application
 
 
-class ApplicationDetailView(LoginRequiredMixin, DetailView):
+class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
 
-class CodeDetailView(DetailView):
+class CodeDetailView(RelatedOrganizationPermissionMixin, DetailView):
+    related_organization_field = "application"
     model = models.Code
 
 
