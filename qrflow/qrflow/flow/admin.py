@@ -21,13 +21,33 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
     search_fields = ('id', 'organization__id', 'organization__name', 'domain')
 
 
+class ApplicationListFilter(admin.SimpleListFilter):
+
+    title = "Applications"
+    parameter_name = 'application'
+
+    def lookups(self, request, model_admin):
+        return [
+            (item.id, item.name)
+            for item in models.Application.objects.filter(organization__in=request.user.organization_set.all())
+        ]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(application=self.value())
+
+
 @admin.register(models.Endpoint)
 class EndpointAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
 
     related_organization_field = "application"
+    related_filtered_fields = [
+        {"field": related_organization_field, "factory": models.Application.objects.all()},
+    ]
+
+    related_organization_field = "application"
     list_display = ('id', 'application', 'name', 'method', 'target', 'parameters')
     search_fields = ('id', 'application__id', 'application__name', 'name', 'method', 'target')
-    list_filter = ('application',)
+    list_filter = (ApplicationListFilter,)
 
 
 @admin.register(models.Code)
@@ -40,7 +60,11 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
         return format_html('<a href="/media/{url}"><img src="/media/{url}" width="64px;" /></a>', url=obj.image)
 
     related_organization_field = "application"
+    related_filtered_fields = [
+        {"field": related_organization_field, "factory": models.Application.objects.all()},
+    ]
+
     list_display = ('id', 'application', 'name', 'endpoint', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
-    list_filter = ('application',)
+    list_filter = (ApplicationListFilter,)

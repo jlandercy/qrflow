@@ -38,6 +38,7 @@ class OrganizationPermissionMixin(BasePermissionMixin):
 class RelatedOrganizationPermissionMixin(BasePermissionMixin):
 
     related_organization_field = None
+    related_filtered_fields = []
 
     def get_queryset(self, *args, **kwargs):
         request = args[0] if args else kwargs.get('request') or self.request
@@ -48,14 +49,8 @@ class RelatedOrganizationPermissionMixin(BasePermissionMixin):
             (self.related_organization_field + "__organization__in"): request.user.organization_set.all()
         })
 
-#
-# class OrganizationMembershipPermissionMixin(BasePermissionMixin):
-#
-#     def get_queryset(self, *args, **kwargs):
-#         request = args[0] if args else kwargs.get('request') or self.request
-#         query = super().get_queryset(*args, **kwargs)
-#         if request.user.is_superuser:
-#             return query
-#         return query.filter(
-#             organizationmembership__in=request.user.organizationmembership_set.all()
-#         )
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        for config in self.related_filtered_fields:
+            form.base_fields[config["field"]].queryset = config["factory"].filter(organization__in=request.user.organization_set.all())
+        return form
