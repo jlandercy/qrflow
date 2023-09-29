@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.utils.html import mark_safe, format_html
 
 from flow import models
+from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 
 
 @admin.register(models.Application)
-class ApplicationAdmin(admin.ModelAdmin):
+class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
     def _code_count(self, obj):
         return obj.code_count
@@ -20,15 +21,16 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Endpoint)
-class EndpointAdmin(admin.ModelAdmin):
+class EndpointAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
 
+    related_organization_field = "application"
     list_display = ('id', 'application', 'name', 'method', 'target', 'parameters')
     search_fields = ('id', 'application__id', 'application__name', 'name', 'method', 'target')
     list_filter = ('application',)
 
 
 @admin.register(models.Code)
-class CodeAdmin(admin.ModelAdmin):
+class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
 
     def _base64(self, obj):
         return obj.base64[:128]
@@ -36,6 +38,7 @@ class CodeAdmin(admin.ModelAdmin):
     def _image_tag(self, obj):
         return format_html('<a href="/media/{url}"><img src="/media/{url}" width="64px;" /></a>', url=obj.image)
 
+    related_organization_field = "application"
     list_display = ('id', 'application', 'name', 'endpoint', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)

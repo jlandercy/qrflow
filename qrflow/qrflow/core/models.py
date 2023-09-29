@@ -35,6 +35,7 @@ class CustomUser(AbstractUser, AbstractBaseModel):
 
 
 class Organization(AbstractBaseModel):
+
     name = models.CharField(max_length=128, unique=True)
     users = models.ManyToManyField("CustomUser", through="OrganizationMembership")
 
@@ -50,7 +51,9 @@ class AbstractOwnershipModel(models.Model):
 class OrganizationMembership(AbstractBaseModel):
 
     class Meta:
-        unique_together = (('user', 'organization'),)
+        unique_together = [
+            ('user', 'organization')
+        ]
 
     user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT)
     organization = models.ForeignKey(Organization, on_delete=models.RESTRICT)

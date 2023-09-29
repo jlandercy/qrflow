@@ -1,10 +1,11 @@
 from django.contrib import admin
 
 from pki import models
+from core.permissions import OrganizationPermissionMixin
 
 
 @admin.register(models.Certificate)
-class CertificateAdmin(admin.ModelAdmin):
+class CertificateAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
     def _signature(self, obj):
         return obj.signature[:32]
