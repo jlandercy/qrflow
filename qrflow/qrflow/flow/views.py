@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, DetailView
+from django.shortcuts import render, reverse
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
-from flow import models
+from flow import models, forms
 
 
 class ApplicationListView(OrganizationPermissionMixin, ListView):
@@ -13,10 +13,19 @@ class ApplicationListView(OrganizationPermissionMixin, ListView):
 class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
-    def get(self, request, *args, **kwargs):
-        response = super().get(self, request, *args, **kwargs)
-        response.set_cookie("application", kwargs["pk"])
-        return response
+    # def get(self, request, *args, **kwargs):
+    #     response = super().get(self, request, *args, **kwargs)
+    #     response.set_cookie("application", kwargs["pk"])
+    #     return response
+
+
+class ApplicationScannerView(FormView):
+    template_name = "flow/application_scanner.html"
+    model = models.Application
+    form_class = forms.ApplicationScannerForm
+
+    def get_success_url(self):
+        return reverse('flow:application-scanner', kwargs={'pk': self.kwargs["pk"]})
 
 
 class CodeDetailView(RelatedOrganizationPermissionMixin, DetailView):

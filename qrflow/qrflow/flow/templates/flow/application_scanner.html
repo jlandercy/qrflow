@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block headers %}
     <!-- HTML5-QRCode (https://github.com/mebjas/html5-qrcode) -->
@@ -20,16 +21,14 @@
     <div class="row col-sm-12 p-2">
         <div id="qr-reader" class="col-sm-4"></div>
         <div class="col-sm-8">
-            <h6><code>{{ request.COOKIES.organization }}</code></h6>
-            <h6><code>{{ request.COOKIES.application }}</code></h6>
-            <h4><strong><code id="qr-reader-format"></code></strong></h4>
-            <h5><code id="qr-reader-content"></code></h5>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </form>
         </div>
     </div>
 
-    <div class="row col-sm-12 p-2">
-        <pre><code id="qr-reader-scanned" class="language-json"></code></pre>
-    </div>
 
     <script type="text/javascript">
         var qrcode_process_url = "{% url 'flow-api:echo' %}";

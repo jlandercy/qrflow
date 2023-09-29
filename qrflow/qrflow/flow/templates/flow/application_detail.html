@@ -4,6 +4,7 @@
     {% load static %}
     <div class="row col-sm-12 p-2">
         <h3 class="page-header"><i class="bi bi-app-indicator"></i> {{ object.name }}</h3>
+        <p><a href="{% url 'flow:application-scanner' object.id %}" class="btn btn-primary">Scanner</a></p>
     </div>
 
     <div class="row col-sm-12 p-2">
