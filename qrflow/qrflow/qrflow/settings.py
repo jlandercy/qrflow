@@ -15,7 +15,7 @@ JWT_SECRET_KEY = os.getenv("APP_JWT_SECRET_KEY", secrets.token_hex(64))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.getenv("APP_DEBUG_MODE", "1")))
 
-ALLOWED_HOSTS = ["localhost", os.getenv("APP_ALLOWED_HOST", "qrflow.com")]
+ALLOWED_HOSTS = ["localhost", "192.168.1.27", os.getenv("APP_ALLOWED_HOST", "qrflow.com")]
 
 
 # Application definition

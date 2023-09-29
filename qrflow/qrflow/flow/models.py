@@ -1,6 +1,5 @@
-import io
 import base64
-import os
+import json
 from urllib.parse import urlparse
 
 from django.db import models
@@ -76,10 +75,7 @@ class Code(AbstractBaseModel):
 
     def save(self, *args, **kwargs):
 
-        if "payload" in self.payload:
-            image = QRCodeHelper.render(self.payload["payload"])
-        else:
-            image = QRCodeHelper.render(self.payload)
+        image = QRCodeHelper.render(json.dumps(self.payload))
 
         if self.image:
             self.image.storage.delete(self.image.path)
