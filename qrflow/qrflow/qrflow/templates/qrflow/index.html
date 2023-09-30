@@ -8,6 +8,7 @@
     </div>
     -->
     <div class="row col-sm-12 p-2">
+        <!--
         <a href="{% url 'flow:qrcode' %}" class="col-sm-2 text-center">
             <i class="bi bi-upc" style="font-size: 50px;"></i>
             <h5>QR-Code</h5>
@@ -16,9 +17,14 @@
             <i class="bi bi-upc-scan" style="font-size: 50px;"></i>
             <h5>Scanner</h5>
         </a>
+        -->
         {% if user.is_authenticated  %}
+        <a href="{% url 'core:organization-list' %}" class="col-sm-2 text-center">
+            <i class="bi bi-diagram-3" style="font-size: 50px;"></i>
+            <h5>Organizations</h5>
+        </a>
         <a href="{% url 'flow:application-list' %}" class="col-sm-2 text-center">
-            <i class="bi bi-app" style="font-size: 50px;"></i>
+            <i class="bi bi-app-indicator" style="font-size: 50px;"></i>
             <h5>Applications</h5>
         </a>
         {% endif %}
