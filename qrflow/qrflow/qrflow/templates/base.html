@@ -41,10 +41,9 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'core:organization-list' %}"><i class="bi bi-diagram-3"></i> Organizations</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'schema-swagger-ui' %}"><i class="bi bi-book"></i> Docs</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle"></i> <strong>{{user.username}}</strong></a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-cpu"></i> Admin</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle"></i> Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'schema-swagger-ui' %}"><i class="bi bi-book"></i> API</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'account:logout' %}"><i class="bi bi-x-circle"></i> Logout</a></li>
                             {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'account:login' %}"><i class="bi bi-check2-circle"></i> Login</a></li>

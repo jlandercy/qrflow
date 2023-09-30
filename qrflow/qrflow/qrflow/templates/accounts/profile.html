@@ -3,12 +3,33 @@
 {% block content %}
     {% load static %}
     <div class="row col-sm-12 p-2">
-        <h3 class="page-header"><i class="bi bi-person-circle"></i> Profile</h3>
-        <p>Welcome <strong>{{ user.username }}</strong>.</p>
+        <h3 class="page-header">
+            <i class="bi bi-person-circle"></i> <a href="{% url 'profile' %}">{{ user.username }}</a>
+        </h3>
+        <p>Select your organization.</p>
     </div>
 
     <div class="row col-sm-12 p-2">
-        <p>Connect your <a href="{% url 'core:organization-list' %}">organizations</a>.</p>
+        <h4><i class="bi bi-diagram-3"></i> Organizations</h4>
+    </div>
+
+    <div class="row col-sm-12 p-2">
+        {% for object in user.organization_set.all %}
+
+        <div class="col-sm-3">
+            <a href="{% url 'core:organization-detail' object.id %}" class="col-sm-2 text-center">
+            <div class="card m-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.name }}</h5>
+                    <span style="font-size: 50pt;"><i class="bi bi-diagram-3"></i></span>
+                    <p class="card-text">{{ object.description }}</p>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        {% endfor %}
+
     </div>
 
 {% endblock %}
