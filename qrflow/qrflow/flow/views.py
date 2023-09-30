@@ -6,10 +6,6 @@ from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPer
 from flow import models, forms
 
 
-class ApplicationListView(OrganizationPermissionMixin, ListView):
-    model = models.Application
-
-
 class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     model = models.Application
 
@@ -34,11 +30,6 @@ class ApplicationScannerView(DetailView, FormView):
         initial['application'] = application.id
         return initial
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['object'] = models.Application.objects.get(pk=self.kwargs['pk'])
-    #     return context
-
     def form_valid(self, form):
         data = form.cleaned_data
         print(data)
@@ -48,12 +39,3 @@ class ApplicationScannerView(DetailView, FormView):
 class CodeDetailView(RelatedOrganizationPermissionMixin, DetailView):
     related_organization_field = "application"
     model = models.Code
-
-
-class QRCodeView(TemplateView):
-    template_name = "flow/qrcode.html"
-
-
-class ScannerView(TemplateView):
-    template_name = "flow/scanner.html"
-

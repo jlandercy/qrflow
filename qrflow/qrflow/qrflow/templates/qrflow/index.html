@@ -2,31 +2,52 @@
 
 {% block content %}
     {% load static %}
-    <!--
+
     <div class="row col-sm-12 p-2">
         <h3 class="page-header"><img src="{% static 'favicon.png' %}" width="32pt" /> QR-Flow</h3>
+        <p>Welcome to QR-Flow application.</p>
     </div>
-    -->
+
+
+    <div class="row col-sm-12">
+        <div class="col-sm-4">
+            <div class="card m-3">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card m-3">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card m-3">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row col-sm-12 p-2">
-        <!--
-        <a href="{% url 'flow:qrcode' %}" class="col-sm-2 text-center">
-            <i class="bi bi-upc" style="font-size: 50px;"></i>
-            <h5>QR-Code</h5>
-        </a>
-        <a href="{% url 'flow:scanner' %}" class="col-sm-2 text-center">
-            <i class="bi bi-upc-scan" style="font-size: 50px;"></i>
-            <h5>Scanner</h5>
-        </a>
-        -->
         {% if user.is_authenticated  %}
-        <a href="{% url 'core:organization-list' %}" class="col-sm-2 text-center">
-            <i class="bi bi-diagram-3" style="font-size: 50px;"></i>
-            <h5>Organizations</h5>
-        </a>
-        <a href="{% url 'flow:application-list' %}" class="col-sm-2 text-center">
-            <i class="bi bi-app-indicator" style="font-size: 50px;"></i>
-            <h5>Applications</h5>
-        </a>
+        <p>Go to your <a href="{% url 'profile' %}">profile</a>.</p>
         {% endif %}
     </div>
 {% endblock %}

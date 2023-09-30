@@ -40,11 +40,8 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-<!--                            <li class="nav-item"><a class="nav-link" href="{% url 'flow:qrcode' %}"><i class="bi bi-upc"></i> QR-Code</a></li>-->
-<!--                            <li class="nav-item"><a class="nav-link" href="{% url 'flow:scanner' %}"><i class="bi bi-upc-scan"></i> Scanner</a></li>-->
                             {% if user.is_authenticated %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'core:organization-list' %}"><i class="bi bi-diagram-3"></i> Organizations</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'flow:application-list' %}"><i class="bi bi-app-indicator"></i> Applications</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'schema-swagger-ui' %}"><i class="bi bi-book"></i> Docs</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-cpu"></i> Admin</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle"></i> Profile</a></li>
