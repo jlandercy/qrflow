@@ -32,11 +32,15 @@ class ApplicationListFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         return [
             (item.id, item.name)
-            for item in models.Application.objects.filter(organization__in=request.user.organization_set.all())
+            for item in models.Application.objects.filter(
+                organization__in=request.user.organization_set.all()
+            )
         ]
 
     def queryset(self, request, queryset):
-        return queryset.filter(application=self.value())
+        if self.value():
+            return queryset.filter(application=self.value())
+        return queryset
 
 
 @admin.register(models.Endpoint)
