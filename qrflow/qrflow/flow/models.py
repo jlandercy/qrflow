@@ -6,6 +6,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+from encrypted_json_fields import fields as efields
+
 from qrflow import constants
 from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow import managers
@@ -21,6 +23,7 @@ class Application(AbstractBaseModel, AbstractOwnershipModel):
     objects = managers.ApplicationManager()
     name = models.CharField(max_length=128, unique=False, help_text="Application name")
     domain = models.URLField(help_text="Domain to validate endpoint URLs")
+    credentials = efields.EncryptedJSONField(default=dict, null=True, blank=True)
 
 
 class Endpoint(AbstractBaseModel):

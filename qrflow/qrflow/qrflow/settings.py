@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'dbbackup',
     'django_cleanup.apps.CleanupConfig',
+    'encrypted_model_fields',
+    'encrypted_json_fields',
     # Project:
     'core',
     'pki',
@@ -232,3 +234,8 @@ DBBACKUP_CONNECTORS = {
 # https://django-organizations.readthedocs.io/en/latest/getting_started.html
 # INVITATION_BACKEND = 'myapp.backends.MyInvitationBackend'
 # REGISTRATION_BACKEND = 'myapp.backends.MyRegistrationBackend'
+
+# https://pypi.org/project/django-encrypted-model-fields/
+# https://pypi.org/project/django-encrypted-json-fields/
+FIELD_ENCRYPTION_KEY = os.environ.get('APP_FIELD_ENCRYPTION_KEY', 'A70i76jZ0dtoK004SnA7saSIHrnNNDGjsF1R1CuxFeA=')
+EJF_ENCRYPTION_KEYS = FIELD_ENCRYPTION_KEY
