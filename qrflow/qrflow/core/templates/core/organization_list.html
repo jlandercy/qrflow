@@ -3,15 +3,28 @@
 {% block content %}
     {% load static %}
     <div class="row col-sm-12 p-2">
-        <h3 class="page-header"><i class="bi bi-diagram-3"></i> Organizations</h3>
+        <h3 class="page-header">
+            <i class="bi bi-person-circle"></i> <a href="{% url 'profile' %}">{{ user.username }}</a>
+            <i class="bi bi-chevron-compact-right"></i>
+            <i class="bi bi-diagram-3"></i> Organizations
+        </h3>
     </div>
 
     <div class="row col-sm-12 p-2">
         {% for object in object_list %}
-        <a href="{% url 'core:organization-detail' object.id %}" class="col-sm-2 text-center">
-            <i class="bi bi-diagram-3" style="font-size: 50px;"></i>
-            <h5>{{ object.name }}</h5>
-        </a>
+
+        <div class="col-sm-3">
+            <a href="{% url 'core:organization-detail' object.id %}" class="col-sm-2 text-center">
+            <div class="card m-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.name }}</h5>
+                    <span style="font-size: 50pt;"><i class="bi bi-diagram-3"></i></span>
+                    <p class="card-text">{{ object.description }}</p>
+                </div>
+            </div>
+            </a>
+        </div>
+
         {% endfor %}
     </div>
 

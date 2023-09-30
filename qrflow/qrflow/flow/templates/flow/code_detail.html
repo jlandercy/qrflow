@@ -4,6 +4,8 @@
     {% load static %}
     <div class="row col-sm-12 p-2">
         <h3 class="page-header">
+            <i class="bi bi-person-circle"></i> <a href="{% url 'profile' %}">{{ user.username }}</a>
+            <i class="bi bi-chevron-compact-right"></i>
             <i class="bi bi-diagram-3"></i> <a href="{% url 'core:organization-detail' object.application.organization.id %}">{{ object.application.organization.name }}</a>
             <i class="bi bi-chevron-compact-right"></i>
             <i class="bi bi-app-indicator"></i> <a href="{% url 'flow:application-detail' object.application.id %}">{{ object.application.name }}</a>
