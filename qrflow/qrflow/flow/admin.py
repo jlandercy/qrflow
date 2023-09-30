@@ -6,6 +6,25 @@ from core.models import Organization
 from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 
 
+class OrganizationListFilter(admin.SimpleListFilter):
+
+    title = "Organizations"
+    parameter_name = 'organization'
+
+    def lookups(self, request, model_admin):
+        return [
+            (item.id, item.name)
+            for item in Organization.objects.filter(
+                id__in=request.user.organization_set.all()
+            )
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(organization=self.value())
+        return queryset
+
+
 @admin.register(models.Application)
 class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
@@ -22,6 +41,15 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
     list_display = ('id', 'organization', 'name', '_domain', '_code_count', '_endpoint_count')
     search_fields = ('id', 'organization__id', 'organization__name', 'domain')
+    list_filter = (OrganizationListFilter,)
+
+
+class ApplicationOrganizationListFilter(OrganizationListFilter):
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(application__organization=self.value())
+        return queryset
 
 
 class ApplicationListFilter(admin.SimpleListFilter):
@@ -54,7 +82,7 @@ class EndpointAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
     related_organization_field = "application"
     list_display = ('id', 'application', 'name', 'method', 'target', 'parameters')
     search_fields = ('id', 'application__id', 'application__name', 'name', 'method', 'target')
-    list_filter = (ApplicationListFilter,)
+    list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)
 
 
 @admin.register(models.Code)
@@ -74,4 +102,4 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
     list_display = ('id', 'application', 'name', 'endpoint', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
-    list_filter = (ApplicationListFilter,)
+    list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)
