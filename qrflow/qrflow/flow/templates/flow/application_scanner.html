@@ -14,7 +14,13 @@
 {% block content %}
     {% load static %}
     <div class="row col-sm-12 p-2">
-        <h3 class="page-header"><i class="bi bi-upc-scan"></i> Scanner</h3>
+        <h3 class="page-header">
+            <i class="bi bi-diagram-3"></i> <a href="{% url 'core:organization-detail' object.organization.id %}">{{ object.organization.name }}</a>
+            <i class="bi bi-chevron-compact-right"></i>
+            <i class="bi bi-app-indicator"></i> <a href="{% url 'flow:application-detail' object.id %}">{{ object.name }}</a>
+            <i class="bi bi-chevron-compact-right"></i>
+            <i class="bi bi-upc-scan"></i> Scanner
+        </h3>
     </div>
 
     <!-- QR Code Reader -->

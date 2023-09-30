@@ -19,7 +19,7 @@ class ApplicationDetailView(OrganizationPermissionMixin, DetailView):
     #     return response
 
 
-class ApplicationScannerView(FormView):
+class ApplicationScannerView(DetailView, FormView):
     template_name = "flow/application_scanner.html"
     model = models.Application
     form_class = forms.ApplicationScannerForm
@@ -36,7 +36,7 @@ class ApplicationScannerView(FormView):
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
-    #     #context['object'] = models.Application.objects.get(pk=self.kwargs['pk'])
+    #     context['object'] = models.Application.objects.get(pk=self.kwargs['pk'])
     #     return context
 
     def form_valid(self, form):
