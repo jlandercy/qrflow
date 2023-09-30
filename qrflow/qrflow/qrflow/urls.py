@@ -38,8 +38,8 @@ urlpatterns = [
 
     # Admin & Accounts:
     path('admin/', admin.site.urls),
-    path('account/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
-    path("account/profile/", views.ProfileView.as_view(), name="profile"),
+    path('accounts/', include(('django.contrib.auth.urls', 'django.contrib.auth'), namespace='account')),
+    path("accounts/profile/", views.ProfileView.as_view(), name="profile"),
 
     # API (DRF):
     #path('api-auth/', include('rest_framework.urls')),
