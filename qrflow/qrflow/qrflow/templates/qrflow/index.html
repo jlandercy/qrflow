@@ -5,29 +5,57 @@
 
     <div class="row col-sm-12 p-2">
         <h3 class="page-header"><img src="{% static 'favicon.png' %}" width="32pt" /> QR-Flow</h3>
-        <p>Welcome to QR-Flow application.</p>
+        <p>Welcome to QR-Flow service.</p>
     </div>
 
 
     <div class="row col-sm-12">
 
         <div class="col-sm-4">
+            <div class="card m-3" style="height: 220px;">
+                <div class="card-body">
+                    <h5 class="card-title">Clean flow</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">A simple workflow for all your bar codes.</h6>
+                    <p class="card-text">
+                        Start your station or scanner, select your application and start to scan.
+                    </p>
+                    {% if user.is_authenticated  %}
+                    <p>Go to your <a href="{% url 'profile' %}">Profile</a>.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
             <div class="card m-3">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <h5 class="card-title">Admin center</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">A simple interface to manage your applications.</h6>
+                    <p class="card-text">
+                        Configure your application, create bar codes.
+                    </p>
+                    {% if user.is_authenticated  %}
+                    <p>Go to <a href="{% url 'admin:index' %}">Admin center</a>.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card m-3">
+                <div class="card-body">
+                    <h5 class="card-title">Modern API</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">A modern API to connect your applications.</h6>
+                    <p class="card-text">
+                        Connect the API and start to interact programmatically.
+                    </p>
+                    {% if user.is_authenticated  %}
+                    <p>Go to <a href="{% url 'schema-swagger-ui' %}">API</a>.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="row col-sm-12 p-2">
-        {% if user.is_authenticated  %}
-        <p>Go to your <a href="{% url 'profile' %}">profile</a>.</p>
-        {% endif %}
-    </div>
 {% endblock %}
