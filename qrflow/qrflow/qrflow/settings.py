@@ -3,6 +3,9 @@ import secrets
 from datetime import timedelta
 from pathlib import Path
 
+from django.contrib.messages import constants as messages
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -239,3 +242,8 @@ DBBACKUP_CONNECTORS = {
 # https://pypi.org/project/django-encrypted-json-fields/
 FIELD_ENCRYPTION_KEY = os.environ.get('APP_FIELD_ENCRYPTION_KEY', 'A70i76jZ0dtoK004SnA7saSIHrnNNDGjsF1R1CuxFeA=')
 EJF_ENCRYPTION_KEYS = FIELD_ENCRYPTION_KEY
+
+# https://stackoverflow.com/questions/41369105/django-bootstrap-alerts-not-working-as-expected
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

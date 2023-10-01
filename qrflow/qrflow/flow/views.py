@@ -3,6 +3,8 @@ from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
+import requests
+
 from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 from flow import models, forms
 
@@ -33,8 +35,21 @@ class ApplicationScannerView(DetailView, FormView):
         return initial
 
     def form_valid(self, form):
-        data = form.cleaned_data
-        messages.info(self.request, data)
+
+        application = models.Application.objects.get(pk=self.kwargs['pk'])
+
+        if application.forward_endpoint:
+            try:
+                response = requests.request(
+                    application.forward_endpoint.method,
+                    url=application.forward_endpoint.target,
+                    headers={},
+                    json=form.cleaned_data
+                )
+                messages.info(self.request, response.json())
+            except Exception as error:
+                messages.error(self.request, str(error))
+
         return super().form_valid(form)
 
 
