@@ -77,3 +77,15 @@ class Code(AbstractBaseModel):
         self.image = InMemoryUploadedFile(image, 'ImageField', 'qrcode.png', 'PNG', image.getbuffer().nbytes, None)
 
         super().save(*args, **kwargs)
+
+
+class Log(AbstractBaseModel):
+
+    class Meta:
+        ordering = ("-created",)
+
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, null=True, blank=True)
+    endpoint = models.ForeignKey(Endpoint, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.IntegerField(null=True, blank=False)
+    payload = models.JSONField(null=True, blank=False)
+    response = models.JSONField(null=True, blank=False)

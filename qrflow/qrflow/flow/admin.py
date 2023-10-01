@@ -94,3 +94,16 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
     list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)
+
+
+@admin.register(models.Log)
+class LogAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
+
+    related_organization_field = "application"
+    related_filtered_fields = [
+        {"field": related_organization_field, "factory": models.Application.objects.all()},
+    ]
+
+    list_display = ('created', 'application', 'endpoint', 'status', 'payload', 'response')
+    search_fields = ('id', 'application', 'endpoint')
+    list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)

@@ -46,9 +46,17 @@ class ApplicationScannerView(DetailView, FormView):
                     headers={},
                     json=form.cleaned_data
                 )
+                models.Log.objects.create(
+                    application=application,
+                    endpoint=application.forward_endpoint,
+                    status=response.status_code,
+                    payload=form.cleaned_data,
+                    response=response.json()
+                )
                 messages.info(self.request, response.json())
+
             except Exception as error:
-                messages.error(self.request, str(error))
+                messages.error(self.request, "Payload not submitted, try again")
 
         return super().form_valid(form)
 
