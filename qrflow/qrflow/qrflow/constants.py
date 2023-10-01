@@ -9,3 +9,7 @@ HTTP_METHODS = (
     ('TRACE', 'TRACE'),
     ('CONNECT', 'CONNECT'),
 )
+SCANNER_MODES = (
+    ('FORWARD', 'FORWARD'),
+    ('RPC', 'RPC'),
+)

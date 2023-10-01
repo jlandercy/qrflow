@@ -25,6 +25,18 @@ class OrganizationListFilter(admin.SimpleListFilter):
         return queryset
 
 
+@admin.register(models.Endpoint)
+class EndpointAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
+
+    def _target(self, obj):
+        if obj.target:
+            return mark_safe('<a href="{url:}">{url:}</a>'.format(url=obj.target))
+
+    list_display = ('id', 'name', 'method', '_target', 'parameters')
+    search_fields = ('id', 'name', 'method', 'target')
+    list_filter = (OrganizationListFilter,)
+
+
 @admin.register(models.Application)
 class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
 
@@ -32,15 +44,8 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
         return obj.code_count
     _code_count.admin_order_field = 'code_count'
 
-    def _endpoint_count(self, obj):
-        return obj.endpoint_count
-    _code_count.admin_order_field = 'endpoint_count'
-
-    def _domain(self, obj):
-        return mark_safe('<a href="{url:}" target="_blank">{url:}</a>'.format(url=obj.domain))
-
-    list_display = ('id', 'organization', 'name', '_domain', '_code_count', '_endpoint_count')
-    search_fields = ('id', 'organization__id', 'organization__name', 'domain')
+    list_display = ('id', 'organization', 'name', '_code_count', 'auto_post', 'forward_endpoint')
+    search_fields = ('id', 'organization__id', 'organization__name')
     list_filter = (OrganizationListFilter,)
 
 
@@ -71,20 +76,6 @@ class ApplicationListFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(models.Endpoint)
-class EndpointAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
-
-    related_organization_field = "application"
-    related_filtered_fields = [
-        {"field": related_organization_field, "factory": models.Application.objects.all()},
-    ]
-
-    related_organization_field = "application"
-    list_display = ('id', 'application', 'name', 'method', 'target', 'parameters')
-    search_fields = ('id', 'application__id', 'application__name', 'name', 'method', 'target')
-    list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)
-
-
 @admin.register(models.Code)
 class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
 
@@ -99,7 +90,7 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
         {"field": related_organization_field, "factory": models.Application.objects.all()},
     ]
 
-    list_display = ('id', 'application', 'name', 'endpoint', 'payload', '_image_tag', 'zorder')
+    list_display = ('id', 'application', 'name', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
     list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)

@@ -11,6 +11,11 @@ function docReady(fn) {
 docReady(function() {
 
     var formPayloadField = document.getElementById('id_payload');
+    var formAutoPostField = document.getElementById('id_auto_post');
+    var formSubmitButton = document.getElementById('id_submit');
+
+    document.getElementById('id_payload').readOnly = true;
+
     var lastResult, countResults = 0;
     var payload = JSON.parse(formPayloadField.value);
 
@@ -35,6 +40,10 @@ docReady(function() {
             console.log(payload);
 
             formPayloadField.value = JSON.stringify(payload, null, 2)
+
+            if(formAutoPostField.checked) {
+                formSubmitButton.click();
+            }
 
         }
     }

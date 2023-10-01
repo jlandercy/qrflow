@@ -14,6 +14,22 @@ from flow import managers
 from flow.helpers import QRCodeHelper
 
 
+class Endpoint(AbstractBaseModel, AbstractOwnershipModel):
+
+    class Meta:
+        unique_together = ("organization", "name")
+        ordering = ("name",)
+
+    name = models.CharField(max_length=128, unique=False)
+    method = models.CharField(max_length=8, choices=constants.HTTP_METHODS, default='GET', help_text="HTTP method to contact the endpoint")
+    target = models.URLField(help_text="Endpoint target URL (raw or template)")
+    parameters = models.JSONField(blank=True, default=dict, help_text="Specific parameters to contact the endpoint (excluded credentials)")
+    credentials = efields.EncryptedJSONField(default=dict, null=True, blank=True)
+
+    # def __str__(self):
+    #     return "%s: %s %s" % (self.name, self.method, self.target)
+
+
 class Application(AbstractBaseModel, AbstractOwnershipModel):
 
     class Meta:
@@ -22,34 +38,10 @@ class Application(AbstractBaseModel, AbstractOwnershipModel):
 
     objects = managers.ApplicationManager()
     name = models.CharField(max_length=128, unique=False, help_text="Application name")
-    domain = models.URLField(help_text="Domain to validate endpoint URLs")
     credentials = efields.EncryptedJSONField(default=dict, null=True, blank=True)
-
-
-class Endpoint(AbstractBaseModel):
-
-    class Meta:
-        unique_together = ("application", "name")
-        ordering = ("name",)
-
-    application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="endpoints", help_text="Endpoint's application")
-    name = models.CharField(max_length=128, unique=False)
-    method = models.CharField(max_length=8, choices=constants.HTTP_METHODS, default='GET', help_text="HTTP method to contact the endpoint")
-    target = models.URLField(help_text="Endpoint target URL (raw or template)")
-    parameters = models.JSONField(blank=True, default=dict, help_text="Specific parameters to contact the endpoint (excluded credentials)")
-
-    def clean(self):
-
-        # Check Endpoint URL compliance with domain:
-        target = urlparse(self.target)
-        domain = urlparse(self.application.domain)
-        if target.scheme != domain.scheme:
-            raise ValidationError("Endpoint scheme must match.")
-        if target.hostname != domain.hostname:
-            raise ValidationError(
-                'Application endpoint %s must belong to application domain %s' %
-                (self.target, self.application.domain)
-            )
+    #scanner_mode = models.CharField(max_length=16, choices=constants.SCANNER_MODES, default='RPC', help_text="Scanner mode")
+    forward_endpoint = models.ForeignKey(Endpoint, on_delete=models.RESTRICT, null=True, blank=True)
+    auto_post = models.BooleanField(default=False)
 
 
 class Code(AbstractBaseModel):
@@ -66,7 +58,6 @@ class Code(AbstractBaseModel):
         )
 
     application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="codes")
-    endpoint = models.ForeignKey(Endpoint, on_delete=models.RESTRICT, related_name="codes", null=True, blank=True)
     name = models.CharField(max_length=256, unique=False)
     payload = models.JSONField(default=dict, null=True)
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)

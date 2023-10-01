@@ -1,6 +1,7 @@
 from django.shortcuts import render, reverse
 from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from core.permissions import OrganizationPermissionMixin, RelatedOrganizationPermissionMixin
 from flow import models, forms
@@ -28,11 +29,12 @@ class ApplicationScannerView(DetailView, FormView):
         application = models.Application.objects.get(pk=self.kwargs['pk'])
         initial['organization'] = application.organization.id
         initial['application'] = application.id
+        initial['auto_post'] = application.auto_post
         return initial
 
     def form_valid(self, form):
         data = form.cleaned_data
-        print(data)
+        messages.info(self.request, data)
         return super().form_valid(form)
 
 
