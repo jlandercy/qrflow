@@ -32,6 +32,14 @@ docReady(function() {
 
             try {
                 data = JSON.parse(decodedText);
+                if (
+                    (typeof data === "string")
+                    || (typeof data === "number")
+                    || (typeof data === "bigint")
+                    || (typeof data === "boolean")
+                ) {
+                    data = {"message": data};
+                }
             } catch(e) {
                 data = {"message": decodedText};
             }
