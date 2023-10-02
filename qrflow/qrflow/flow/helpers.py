@@ -1,7 +1,10 @@
 import io
 import base64
+import zlib
 
 import qrcode
+import base45
+import cbor2
 
 
 class QRCodeHelper:
@@ -38,3 +41,23 @@ class QRCodeHelper:
             )
 
         return stream
+
+
+class DigitalGreenCertificateHelper:
+
+    @staticmethod
+    def encode(data, meta=None):
+        cbortag = cbor2.dumps(data)
+        compressed = zlib.compress(cbortag)
+        b45data = base45.b45encode(compressed)
+        payload = "HC1:" + b45data.decode()
+        return payload
+
+    @staticmethod
+    def decode(payload):
+        b45data = payload.replace("HC1:", "")
+        decoded = base45.b45decode(b45data)
+        decompressed = zlib.decompress(decoded)
+        cbortag = cbor2.loads(decompressed)
+        data = cbor2.loads(cbortag.value[2])
+        return data
