@@ -1,27 +1,21 @@
 import io
-import base64
 import zlib
 
-from barcode import EAN13
+import barcode
 from barcode.writer import ImageWriter
 import qrcode
 import base45
 import cbor2
 
 
-class EAN13Helper:
+class BarcodeHelper:
 
     @staticmethod
-    def render(payload):
-
-        # Write to a file-like object:
+    def render(payload, class_name='ean13'):
         stream = io.BytesIO()
-        code = EAN13(payload, writer=ImageWriter(format="png"))
+        factory = barcode.get_barcode_class(class_name)
+        code = factory(payload, writer=ImageWriter(format="png"))
         code.write(stream)
-        # stream = io.BytesIO(
-        #     ("data:image/%s;base64, " % "png").encode() + base64.b64encode(stream.getvalue())
-        # )
-
         return stream
 
 
@@ -44,20 +38,10 @@ class QRCodeHelper:
         return image
 
     @staticmethod
-    def render(payload: str, extension: str = "png", inline: bool = False):
-
-        # Create QR Code:
-        image = QRCodeHelper.create(payload)
-
-        # Render QR Code:
+    def render(payload):
         stream = io.BytesIO()
-        image.save(stream, format=extension)
-
-        if inline:
-            stream = io.BytesIO(
-                ("data:image/%s;base64, " % extension).encode() + base64.b64encode(stream.getvalue())
-            )
-
+        image = QRCodeHelper.create(payload)
+        image.save(stream, format="png")
         return stream
 
 

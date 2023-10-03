@@ -1,3 +1,5 @@
+import barcode
+
 HTTP_METHODS = (
     ('HEAD', 'HEAD'),
     ('GET', 'GET'),
@@ -9,13 +11,15 @@ HTTP_METHODS = (
     ('TRACE', 'TRACE'),
     ('CONNECT', 'CONNECT'),
 )
+
 SCANNER_MODES = (
     ('FORWARD', 'FORWARD'),
     ('RPC', 'RPC'),
 )
-CODE_TYPES = (
-    ('EAN13', 'EAN13'),
+
+CODE_TYPES = [
     ('QR', 'QR'),
+    ('QR-JSON', 'QR-JSON'),
     ('QR-EPC', 'QR-EPC'),
     ('QR-DGC', 'QR-DGC'),
-)
+] + [(code, code.upper()) for code in barcode.PROVIDED_BARCODES]

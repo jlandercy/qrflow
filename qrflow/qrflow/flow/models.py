@@ -2,6 +2,7 @@ import base64
 import json
 from urllib.parse import urlparse
 
+import barcode
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -11,7 +12,7 @@ from encrypted_json_fields import fields as efields
 from qrflow import constants
 from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow import managers
-from flow.helpers import QRCodeHelper, DigitalGreenCertificateHelper, EPCHelper, EAN13Helper
+from flow.helpers import QRCodeHelper, DigitalGreenCertificateHelper, EPCHelper, BarcodeHelper
 
 
 class Endpoint(AbstractBaseModel, AbstractOwnershipModel):
@@ -58,7 +59,7 @@ class Code(AbstractBaseModel):
         )
 
     application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="codes")
-    code_type = models.CharField(max_length=8, choices=constants.CODE_TYPES, default='QR', help_text="Type of code")
+    code_type = models.CharField(max_length=16, choices=constants.CODE_TYPES, default='QR', help_text="Type of code")
     name = models.CharField(max_length=256, unique=False)
     payload = models.JSONField(default=dict, null=True, blank=True)
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
@@ -71,20 +72,22 @@ class Code(AbstractBaseModel):
     def save(self, *args, **kwargs):
 
         if self.code_type == "QR":
+            image = QRCodeHelper.render(self.payload["message"])
+        elif self.code_type == "QR-JSON":
             image = QRCodeHelper.render(json.dumps(self.payload))
         elif self.code_type == "QR-EPC":
             image = QRCodeHelper.render(EPCHelper.encode(**self.payload))
         elif self.code_type == "QR-DGC":
             image = QRCodeHelper.render(DigitalGreenCertificateHelper.encode(self.payload))
-        elif self.code_type == "EAN13":
-            image = EAN13Helper.render(self.payload.get("message", "5412345678901"))
+        elif self.code_type in barcode.PROVIDED_BARCODES:
+            image = BarcodeHelper.render(self.payload["message"], class_name=self.code_type)
         else:
             image = QRCodeHelper.render("Not implemented :(")
 
         if self.image:
             self.image.storage.delete(self.image.path)
 
-        self.image = InMemoryUploadedFile(image, 'ImageField', 'qrcode.png', 'PNG', image.getbuffer().nbytes, None)
+        self.image = InMemoryUploadedFile(image, 'ImageField', 'code.png', 'PNG', image.getbuffer().nbytes, None)
 
         super().save(*args, **kwargs)
 
