@@ -40,12 +40,17 @@ class ApplicationScannerView(DetailView, FormView):
 
         if application.forward_endpoint:
             try:
+
+                # API Endpoint Call:
                 response = requests.request(
                     application.forward_endpoint.method,
                     url=application.forward_endpoint.target,
                     headers={},
-                    json=form.cleaned_data
+                    json=form.cleaned_data,
+                    timeout=1.
                 )
+
+                # Log API request/response cycle:
                 models.Log.objects.create(
                     application=application,
                     endpoint=application.forward_endpoint,
@@ -56,7 +61,7 @@ class ApplicationScannerView(DetailView, FormView):
                 messages.info(self.request, response.json())
 
             except Exception as error:
-                messages.error(self.request, "Payload not submitted, try again")
+                messages.error(self.request, "Payload not submitted, try again.")
 
         return super().form_valid(form)
 

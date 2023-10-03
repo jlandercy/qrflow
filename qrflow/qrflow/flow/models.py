@@ -11,7 +11,7 @@ from encrypted_json_fields import fields as efields
 from qrflow import constants
 from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow import managers
-from flow.helpers import QRCodeHelper
+from flow.helpers import QRCodeHelper, DigitalGreenCertificateHelper, EPCHelper, EAN13Helper
 
 
 class Endpoint(AbstractBaseModel, AbstractOwnershipModel):
@@ -58,8 +58,9 @@ class Code(AbstractBaseModel):
         )
 
     application = models.ForeignKey(Application, on_delete=models.RESTRICT, related_name="codes")
+    code_type = models.CharField(max_length=8, choices=constants.CODE_TYPES, default='QR', help_text="Type of code")
     name = models.CharField(max_length=256, unique=False)
-    payload = models.JSONField(default=dict, null=True)
+    payload = models.JSONField(default=dict, null=True, blank=True)
     image = models.ImageField(upload_to=image_path, max_length=512, null=False, blank=True)
     zorder = models.IntegerField(default=0)
 
@@ -69,7 +70,16 @@ class Code(AbstractBaseModel):
 
     def save(self, *args, **kwargs):
 
-        image = QRCodeHelper.render(json.dumps(self.payload))
+        if self.code_type == "QR":
+            image = QRCodeHelper.render(json.dumps(self.payload))
+        elif self.code_type == "QR-EPC":
+            image = QRCodeHelper.render(EPCHelper.encode(**self.payload))
+        elif self.code_type == "QR-DGC":
+            image = QRCodeHelper.render(DigitalGreenCertificateHelper.encode(self.payload))
+        elif self.code_type == "EAN13":
+            image = EAN13Helper.render(self.payload.get("message", "5412345678901"))
+        else:
+            image = QRCodeHelper.render("Not implemented :(")
 
         if self.image:
             self.image.storage.delete(self.image.path)

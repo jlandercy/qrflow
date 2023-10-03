@@ -90,7 +90,7 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
         {"field": related_organization_field, "factory": models.Application.objects.all()},
     ]
 
-    list_display = ('id', 'application', 'name', 'payload', '_image_tag', 'zorder')
+    list_display = ('id', 'application', 'code_type', 'name', 'payload', '_image_tag', 'zorder')
     search_fields = ('id', 'application__id', 'application__name', 'name')
     list_editable = ('zorder',)
     list_filter = (ApplicationOrganizationListFilter, ApplicationListFilter,)

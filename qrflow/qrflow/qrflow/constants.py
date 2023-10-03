@@ -13,3 +13,9 @@ SCANNER_MODES = (
     ('FORWARD', 'FORWARD'),
     ('RPC', 'RPC'),
 )
+CODE_TYPES = (
+    ('EAN13', 'EAN13'),
+    ('QR', 'QR'),
+    ('QR-EPC', 'QR-EPC'),
+    ('QR-DGC', 'QR-DGC'),
+)
