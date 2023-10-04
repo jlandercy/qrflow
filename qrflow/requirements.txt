@@ -1,11 +1,15 @@
 crispy-bootstrap5==0.7
 Django==4.1.2
 django-bootstrap-v5==1.0.11
+django-cleanup==8.0.0
 django-crispy-forms==1.14.0
+django-dbbackup==4.0.2
 django-encrypted-json-fields==1.0.4
 django-encrypted-model-fields==0.6.5
 django-extensions==3.2.1
-django-organizations==2.1.0
+django-rest-swagger==2.2.0
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
 Faker==15.0.0
 numpy==1.23.3
 psycopg2==2.9.4
