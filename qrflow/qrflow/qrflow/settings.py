@@ -145,7 +145,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = URL_PREFIX + 'media/'
-MEDIA_ROOT = os.getenv("APP_MEDIA_ROOT", BASE_DIR.parent.parent / 'media')
+MEDIA_ROOT = Path(os.getenv("APP_MEDIA_ROOT", BASE_DIR.parent.parent / 'media'))
 
 # https://stackoverflow.com/questions/9692625/csrf-verification-failed-request-aborted-on-django
 CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "https://landercy.be"]
