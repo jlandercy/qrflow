@@ -92,7 +92,7 @@ ADD --chown=$PROJECT_NAME:$PROJECT_NAME ./$PROJECT_NAME /home/$PROJECT_NAME/$PRO
 WORKDIR /home/$PROJECT_NAME/$PROJECT_NAME
 
 # Compile messages (translations):
-RUN python3 manage.py compilemessages
+#RUN python3 manage.py compilemessages
 
 # Start service:
 CMD python3 -m gunicorn --log-level $HTTP_LOGLEVEL -b $HTTP_HOST:$HTTP_PORT \
