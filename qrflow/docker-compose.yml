@@ -3,7 +3,7 @@ version: "3.6"
 services:
 
   qrflow-database:
-    image: postgres:13-alpine
+    image: postgres:13
     restart: unless-stopped
     env_file:
       - ../../../secrets/qrflow-database.env
@@ -59,7 +59,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=backend"
       - "traefik.http.routers.qrflow-webservice.entrypoints=websecure"
-      - "traefik.http.routers.qrflow-webservice.rule=Host(`landercy.be`) && PathPrefix(`/qrflow`)"
+      - "traefik.http.routers.qrflow-webservice.rule=Host(`app.landercy.be`) && PathPrefix(`/qrflow`)"
       - "traefic.http.routers.qrflow-webservice.tls=true"
       - "traefik.http.routers.qrflow-webservice.tls.certresolver=lets"
       - "traefik.http.services.qrflow-webservice.loadBalancer.server.port=8080"
