@@ -6,7 +6,7 @@ services:
     image: postgres:13-alpine
     restart: unless-stopped
     env_file:
-      - ../secrets/qrflow-database.env
+      - ../../../secrets/qrflow-database.env
     environment:
       #- POSTGRES_PASSWORD=qrflow
       - POSTGRES_USER=qrflow
@@ -28,7 +28,7 @@ services:
     depends_on:
       - qrflow-database
     env_file:
-      - ../secrets/qrflow.env
+      - ../../../secrets/qrflow.env
     environment:
       # HTTP server settings:
       - "HTTP_WORKERS=5"
