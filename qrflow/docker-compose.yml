@@ -3,7 +3,7 @@ version: "3.6"
 services:
 
   qrflow-database:
-    image: postgres:13
+    image: postgres:16
     restart: unless-stopped
     env_file:
       - ../../../secrets/qrflow-database.env
@@ -41,7 +41,7 @@ services:
       - "DJANGO_SETTINGS_MODULE=qrflow.settings"
       - "APP_DEBUG_MODE=0"
       - "APP_URL_PREFIX=qrflow/"
-      - "APP_ALLOWED_HOST=landercy.be"
+      - "APP_ALLOWED_HOST=app.landercy.be"
       - "APP_DATABASE_NAME=qrflow"
       - "APP_DATABASE_USER=qrflow"
       #- "APP_DATABASE_PASSWORD=qrflow"
@@ -49,8 +49,8 @@ services:
       - "APP_STATIC_ROOT=/home/qrflow/static"
       - "APP_MEDIA_ROOT=/home/qrflow/media"
     volumes:
-      - /home/ubuntu/qrflow/static:/home/qrflow/static
-      - /home/ubuntu/qrflow/media:/home/qrflow/media
+      - /home/ubuntu/git/qrflow/static:/home/qrflow/static
+      - /home/ubuntu/git/qrflow/media:/home/qrflow/media
 #      - qrflow-static:/home/qrflow/static
 #      - qrflow-media:/home/qrflow/media
     networks:
