@@ -1,3 +1,4 @@
+from django.shortcuts import reverse
 from django.contrib import admin
 from django.utils.html import mark_safe, format_html
 
@@ -83,7 +84,8 @@ class CodeAdmin(RelatedOrganizationPermissionMixin, admin.ModelAdmin):
         return obj.base64[:128]
 
     def _image_tag(self, obj):
-        return format_html('<a href="/media/{url}"><img src="/media/{url}" width="64px;" /></a>', url=obj.image)
+        url = reverse("file-server", kwargs={"path": obj.image})
+        return format_html('<a href="{url}"><img src="{url}" width="64px;" /></a>', url=url)
 
     related_organization_field = "application"
     related_filtered_fields = [
