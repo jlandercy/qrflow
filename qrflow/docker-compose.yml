@@ -39,7 +39,7 @@ services:
       - "HTTP_LOGLEVEL=info"
       # Application settings:
       - "DJANGO_SETTINGS_MODULE=qrflow.settings"
-      - "APP_DEBUG_MODE=0"
+      - "APP_DEBUG_MODE=1"
       - "APP_URL_PREFIX=qrflow/"
       - "APP_ALLOWED_HOST=app.landercy.be"
       - "APP_DATABASE_NAME=qrflow"
