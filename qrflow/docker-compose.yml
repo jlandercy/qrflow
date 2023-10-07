@@ -42,6 +42,7 @@ services:
       - "APP_DEBUG_MODE=1"
       - "APP_URL_PREFIX=qrflow/"
       - "APP_ALLOWED_HOST=app.landercy.be"
+      - "APP_CSRF_TRUSTED_ORIGIN=https://app.landercy.be"
       - "APP_DATABASE_NAME=qrflow"
       - "APP_DATABASE_USER=qrflow"
       #- "APP_DATABASE_PASSWORD=qrflow"
