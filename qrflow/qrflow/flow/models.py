@@ -42,7 +42,9 @@ class Application(AbstractBaseModel, AbstractOwnershipModel):
     credentials = efields.EncryptedJSONField(default=dict, null=True, blank=True)
     #scanner_mode = models.CharField(max_length=16, choices=constants.SCANNER_MODES, default='RPC', help_text="Scanner mode")
     forward_endpoint = models.ForeignKey(Endpoint, on_delete=models.RESTRICT, null=True, blank=True)
-    auto_post = models.BooleanField(default=False)
+    repeat_scan = models.BooleanField(default=False, null=False)
+    auto_post = models.BooleanField(default=False, null=False)
+    scan_delay = models.FloatField(default=0., null=False)
 
 
 class Code(AbstractBaseModel):

@@ -39,6 +39,8 @@
 
 
     <script type="text/javascript">
+        var repeat_scan = {{ object.repeat_scan|lower }};
+        var scan_delay = {{ object.scan_delay }};
         var auto_post = {{ object.auto_post|lower }};
     </script>
     <script src="{% static 'js/scanner.js' %}" type="text/javascript"></script>

@@ -31,6 +31,8 @@ class ApplicationScannerView(DetailView, FormView):
         application = models.Application.objects.get(pk=self.kwargs['pk'])
         initial['organization'] = application.organization.id
         initial['application'] = application.id
+        initial['repeat_scan'] = application.repeat_scan
+        initial['scan_delay'] = application.scan_delay
         initial['auto_post'] = application.auto_post
         return initial
 
