@@ -8,13 +8,6 @@ function docReady(fn) {
     }
 }
 
-function sleep(time){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + time){
-        /* Do nothing */
-    }
-}
-
 docReady(function() {
 
     // Bind selectors:
@@ -27,17 +20,21 @@ docReady(function() {
     document.getElementById('id_payload').readOnly = true;
 
     var lastResult, countResults = 0;
+    var t0 = new Date().getTime();
     var payload = JSON.parse(formPayloadField.value);
 
     console.log(payload);
 
     function onScanSuccess(decodedText, decodedResult) {
 
-        // Parse new payload if different of previous or repeated scan are allowed:
-        if ((decodedText !== lastResult) || formRepeatScanField.checked) {
+        var t1 = new Date().getTime();
+
+        // Parse new payload if different of previous or repeated scan are allowed and scan delay is respected:
+        if (((decodedText !== lastResult) || formRepeatScanField.checked) && (t1 > t0 + formScanDelayField.value * 1000.)) {
 
             // Filter out multiple scanning:
             ++countResults;
+            t0 = t1;
             lastResult = decodedText;
             console.log(decodedResult);
 
@@ -64,7 +61,7 @@ docReady(function() {
             formPayloadField.value = JSON.stringify(payload, null, 2)
 
             // Scan delay:
-            sleep(formScanDelayField.value * 1000.);
+            //sleep(formScanDelayField.value * 1000.);
 
             // Auto post:
             if(formAutoPostField.checked) {
