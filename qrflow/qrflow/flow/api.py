@@ -39,6 +39,7 @@ class EchoAPIView(views.APIView):
         return Response({"parameters": request.GET.dict()})
 
     def post(self, request, format=None):
+        print(request.COOKIES)
         return Response({
             "parameters": request.POST.dict(),
             "body": request.data

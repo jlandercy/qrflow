@@ -39,9 +39,8 @@
 
 
     <script type="text/javascript">
-        var repeat_scan = {{ object.repeat_scan|lower }};
-        var scan_delay = {{ object.scan_delay }};
-        var auto_post = {{ object.auto_post|lower }};
+        var application_target_url = "{{ object.forward_endpoint.target }}";
+        var application_request_mode = "{{ object.forward_endpoint.method }}";
     </script>
     <script src="{% static 'js/scanner.js' %}" type="text/javascript"></script>
 

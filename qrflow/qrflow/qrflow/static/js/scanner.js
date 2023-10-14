@@ -60,6 +60,17 @@ docReady(function() {
             // Display payload:
             formPayloadField.value = JSON.stringify(payload, null, 2)
 
+            // Async submit to process:
+            $.ajax({
+                url: application_target_url,
+                type: application_request_mode,
+                data: JSON.stringify(payload),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            }).done(function(data) {
+                console.log(data);
+            });
+
             // Auto post:
             if(formAutoPostField.checked) {
                 formSubmitButton.click();
