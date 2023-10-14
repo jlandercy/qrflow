@@ -32,7 +32,7 @@ docReady(function() {
         // Parse new payload if different of previous or repeated scan are allowed and scan delay is respected:
         if (((decodedText !== lastResult) || formRepeatScanField.checked) && (t1 > t0 + formScanDelayField.value * 1000.)) {
 
-            // Filter out multiple scanning:
+            // Update counters:
             ++countResults;
             t0 = t1;
             lastResult = decodedText;
@@ -59,9 +59,6 @@ docReady(function() {
 
             // Display payload:
             formPayloadField.value = JSON.stringify(payload, null, 2)
-
-            // Scan delay:
-            //sleep(formScanDelayField.value * 1000.);
 
             // Auto post:
             if(formAutoPostField.checked) {
