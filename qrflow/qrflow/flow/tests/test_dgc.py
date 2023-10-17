@@ -12,8 +12,8 @@ class GenericDGCTestCase:
         self.key = self.helper.get_random_key()
 
     def test_encode_decode_verify(self):
-        payload = self.helper.dgc_encode(self.data, key=self.key, header=self.header)
-        data = self.helper.dgc_decode(payload)
+        payload = self.helper.encode(self.data, key=self.key, header=self.header)
+        data = self.helper.decode(payload, key=self.key)
         self.assertEqual(self.data, data["payload"])
 
 
