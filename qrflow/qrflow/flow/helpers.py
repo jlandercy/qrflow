@@ -1,6 +1,5 @@
-import io
+import secrets
 import zlib
-from binascii import unhexlify, hexlify
 
 from pycose.messages import Sign1Message
 from pycose.keys import CoseKey
@@ -99,28 +98,45 @@ class DigitalGreenCertificateHelper:
     """
 
     @staticmethod
-    def get_dummy_key():
+    def get_default_header():
+        return {Algorithm: EdDSA, KID: b'kid2'}
+
+    @staticmethod
+    def get_random_key():
         # Dummy key from https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
-        cose_key = {
+        return CoseKey.from_dict({
             KpKty: KtyOKP,
             OKPKpCurve: Ed25519,
             KpKeyOps: [SignOp, VerifyOp],
-            OKPKpD: unhexlify(b'9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'),
-            OKPKpX: unhexlify(b'd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a')
-        }
-        cose_key = CoseKey.from_dict(cose_key)
-        return cose_key
+            OKPKpD: secrets.token_bytes(32),
+            OKPKpX: secrets.token_bytes(32),
+        })
 
     @staticmethod
-    def dgc_encode(data, prefix="HC1"):
-        cbortag = cbor2.CBORTag(18, [
-            data["protected_header"],
-            data["unprotected_header"],
-            cbor2.dumps(data["payload"]),
-            data["signature"],
+    def dgc_encode(data, header=None, key=None, prefix="HC1"):
+
+        # Encode data:
+        cbordata = cbor2.dumps(data)
+
+        # Sign message:
+        message = DigitalGreenCertificateHelper.sign(cbordata, header=header, key=key)
+
+        # Compose COSE Sign-1 as CBOR-18 Tag:
+        cbortag = cbor2.CBORTag(18,             [
+            message.phdr_encoded,
+            {},
+            cbordata,
+            message.compute_signature()
         ])
+
+        # Encode (CBOR -> ZLIB -> BASE45):
         b45data = DigitalGreenCertificateHelper.encode(cbortag)
-        payload = prefix + ":" + b45data.decode()
+        payload = b45data.decode()
+
+        # Prefix payload:
+        if prefix:
+            payload = prefix + ":" + payload
+
         return payload
 
     @staticmethod
@@ -132,8 +148,12 @@ class DigitalGreenCertificateHelper:
 
     @staticmethod
     def dgc_decode(payload, prefix="HC1"):
-        b45data = payload.replace(prefix + ":", "")
-        cbortag = DigitalGreenCertificateHelper.decode(b45data)
+
+        if prefix:
+            payload = payload.replace(prefix + ":", "")
+
+        cbortag = DigitalGreenCertificateHelper.decode(payload)
+
         return {
             "protected_header": cbortag.value[0],
             "unprotected_header": cbortag.value[1],
@@ -149,17 +169,16 @@ class DigitalGreenCertificateHelper:
         return cbortag
 
     @staticmethod
-    def sign(payload, key=None):
+    def sign(data, header=None, key=None):
 
-        key = key or DigitalGreenCertificateHelper.get_dummy_key()
+        key = key or DigitalGreenCertificateHelper.get_random_key()
+        header = header or DigitalGreenCertificateHelper.get_default_header()
 
-        msg = Sign1Message(
-            phdr={Algorithm: EdDSA, KID: b'kid2'},
+        message = Sign1Message(
+            phdr=header,
             uhdr={},
-            payload=payload,
+            payload=data,
             key=key
         )
-        return {
-            "protected_header": msg.phdr_encoded,
-            "signature": msg.compute_signature()
-        }
+
+        return message
