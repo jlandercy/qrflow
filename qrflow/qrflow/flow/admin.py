@@ -45,7 +45,7 @@ class ApplicationAdmin(OrganizationPermissionMixin, admin.ModelAdmin):
         return obj.code_count
     _code_count.admin_order_field = 'code_count'
 
-    list_display = ('id', 'organization', 'name', '_code_count', 'repeat_scan', 'scan_delay', 'auto_post', 'forward_endpoint')
+    list_display = ('id', 'organization', 'name', '_code_count', 'repeat_scan', 'scan_delay', 'ajax_mode', 'auto_post', 'forward_endpoint')
     search_fields = ('id', 'organization__id', 'organization__name')
     list_filter = (OrganizationListFilter,)
 

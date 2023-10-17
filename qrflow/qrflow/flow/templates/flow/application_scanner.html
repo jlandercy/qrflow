@@ -27,12 +27,24 @@
 
     <!-- QR Code Reader -->
     <div class="row col-sm-12 p-2">
+        <p class="btn btn-success col-sm-4" style="visibility: hidden;" id="id_scanned_label">Scanned</p>
+    </div>
+    <div class="row col-sm-12 p-2">
         <div id="qr-reader" class="col-sm-4"></div>
         <div class="col-sm-8">
+            {% if object.ajax_mode %}
+            <form>
+            {% else %}
             <form method="post">
+            {% endif %}
+                <div style="display: none;">
                 {% csrf_token %}
                 {{ form|crispy }}
+                {% if object.ajax_mode %}
+                {% else %}
                 <input type="submit" value="Submit" id="id_submit" class="btn btn-primary" />
+                {% endif %}
+                </div>
             </form>
         </div>
     </div>
