@@ -21,4 +21,5 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 drf-yasg==1.21.4
 Pillow==9.2.0
+pycose==1.0.1
 python-barcode==0.15.1

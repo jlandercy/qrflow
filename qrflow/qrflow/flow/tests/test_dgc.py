@@ -3,21 +3,21 @@ from django.test import TestCase, SimpleTestCase
 from flow.helpers import DigitalGreenCertificateHelper
 
 
-class AnimalTestCase(SimpleTestCase):
+class GenericDGCTestCase:
 
-    payload = "HC1:6BF+70790T9WJWG.FKY*4GO0.O1CV2 O5 N2FBBRW1*70HS8WY04AC*WIFN0AHCD8KD97TK0F90KECTHGWJC0FDC:5AIA%G7X+AQB9746HS80:54IBQF60R6$A80X6S1BTYACG6M+9XG8KIAWNA91AY%67092L4WJCT3EHS8XJC$+DXJCCWENF6OF63W5NW6WF6%JC QE/IAYJC5LEW34U3ET7DXC9 QE-ED8%E.JCBECB1A-:8$96646AL60A60S6Q$D.UDRYA 96NF6L/5QW6307KQEPD09WEQDD+Q6TW6FA7C466KCN9E%961A6DL6FA7D46JPCT3E5JDLA7$Q6E464W5TG6..DX%DZJC6/DTZ9 QE5$CB$DA/D JC1/D3Z8WED1ECW.CCWE.Y92OAGY8MY9L+9MPCG/D5 C5IA5N9$PC5$CUZCY$5Y$527B+A4KZNQG5TKOWWD9FL%I8U$F7O2IBM85CWOC%LEZU4R/BXHDAHN 11$CA5MRI:AONFN7091K9FKIGIY%VWSSSU9%01FO2*FTPQ3C3F"
-    #payload = "HC1:6BFMX1E8O3POO138IUI4PB7CHFE285++FI28QTD9:4HBIRZ1*5PQ1GNIAQ1UQZMQ SXO71J3 Z2D$F*1CG6P1SUI+UY+4+Z0C7OX7JEUG2FU P7-+J4:UZF9L6WZOL6RC%ZHTQUKQ6TL00N0Q:31YR M7O6UTOELM48OQ6H5W.13LMT2VZETV/OTUAM*VN:QVH9FLPIRKB4M0I0ZHB9SDLF3S4OW0RUY2*2RX.CHCLJPLMYJN01 +6JBUJ.MPU2PP8KHGGI1WMD5-7%*NLW3C/T+FOW.DRF4K7C229*TAAPA0JGRAB6RBH*I8MLV$DFMN-6NMRDAT8YQPR*4NQS$CAQ*DY%CE1O JE6FH1+ILQIB83/*4CXPCQ1066Z7G*W5J2"
-    data = {1: 'DE', 6: 1622316073, 4: 1643356073, -260: {1: {'v': [{'ci': 'URN:UVCI:01DE/IZ12345A/5CWLU12RNOB9RXSEOP6FG8#W', 'co': 'DE', 'dn': 2, 'dt': '2021-05-29', 'is': 'Robert Koch-Institut', 'ma': 'ORG-100031184', 'mp': 'EU/1/20/1507', 'sd': 2, 'tg': '840539006', 'vp': '1119349007'}], 'dob': '1964-08-12', 'nam': {'fn': 'Mustermann', 'gn': 'Erika', 'fnt': 'MUSTERMANN', 'gnt': 'ERIKA'}, 'ver': '1.0.0'}}}
     helper = DigitalGreenCertificateHelper
-    meta = [b'\xa1\x01&', {4: b'\x0cK\x15Q+\xe9\x14\x01'}]
 
     def test_encode(self):
-        payload = self.helper.encode(self.data, meta=self.meta)
-        #print(payload)
+        payload = self.helper.encode(self.data)
         self.assertEqual(payload, self.payload)
 
     def test_dgc_decode(self):
         data = self.helper.decode(self.payload)
-        #print(data)
         self.assertEqual(data, self.data)
 
+
+class VaccinationDGC(GenericDGCTestCase, SimpleTestCase):
+
+    #              NC instead of 6B (why?)
+    payload = "HC1:6BF/Y4P8QPO0DO3EIUU*H%34OTC%*8KE9%$VV%P6+JG28O%DSX27VJJJS3-FZ+P84Q88SD3QYI39:0VY9IE1 B87SMUL5ACEKNM2/6GPOV97%8P/8K:2UV$G:FS.5N7+0+ E9.KBV56:RGA0GO69%3M MC-R6UM4PDG5R/3PPHKEN5:5DC24-H4OAHOV0TV2JU6A 9XB298AMMU$S5AYJQXC+IMJE19T55YNQ7G663DZTT$PK9ANS02SD9I66YDEDGQUD+VH CB87DEI5ZF0+8BZHIB9IH/9DPHRU58VT+12YTIIP16YG2Q53912IO7358Z9TJU38MS10N90:D0.CC9K1PHFT08DO6X*PRX12:MRYK.-A -BYR61 57GJ ECN57CVEG*14+B*-LKT5$.AX-EEMS+JF5D3STL7U8GEE/RQDBM758I%IYOJ+9DKX4* A1R5$.U29K.RKYURTHDC692DR1$UOM9V:7EHCT9WYMB+MDZ%FB+FPK288VG-1 9MM7PI3VACP4/T*5TTYVXLC6+DJVLTYE7QII801:PD3"
+    data = {'protected_header': b'\xa2\x01&\x04H\x0e\x1b)\x96VcIV', 'unprotected_header': {}, 'payload': {1: 'NL', 4: 1637307800, 6: 1621755800, -260: {1: {'ver': '1.0.0', 'nam': {'fn': 'Achternaam', 'fnt': 'ACHTERNAAM', 'gn': 'Voornaam', 'gnt': 'VOORNAAM'}, 'dob': '1963', 'v': [{'tg': '840539006', 'vp': '1119305005', 'mp': 'CVnCoV', 'ma': 'ORG-100032020', 'dn': 1, 'sd': 6, 'dt': '2021-02-18', 'co': 'GR', 'is': 'Ministry of Health Welfare and Sport', 'ci': 'urn:uvci:01:NL:74827831729545bba1c279f592f2488a'}]}}}, 'signature': b'!\xd7\xdcs<\x139\xea\x9b\x1c;\n\x17\x8e\xdc+\xe3\x14t\x97\x9an\xc9\x1bq\xe8\x020\x0f\x8c\xd1\xe7\xda\xc8 \xc2\x91K\x93\xa7\xac\xf6=E\xd7/\xeb\xecQ>}\xc7\x11\x85ET\x0fy\xf3\x13q\xa9\ng'}
