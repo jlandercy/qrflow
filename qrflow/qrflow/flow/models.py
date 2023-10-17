@@ -81,7 +81,7 @@ class Code(AbstractBaseModel):
         elif self.code_type == "QR-EPC":
             image = QRCodeHelper.render(EPCHelper.encode(**self.payload))
         elif self.code_type == "QR-DGC":
-            image = QRCodeHelper.render(DigitalGreenCertificateHelper.encode(self.payload))
+            image = QRCodeHelper.render(DigitalGreenCertificateHelper.dgc_encode(self.payload))
         elif self.code_type in barcode.PROVIDED_BARCODES:
             image = BarcodeHelper.render(self.payload["message"], class_name=self.code_type)
         else:

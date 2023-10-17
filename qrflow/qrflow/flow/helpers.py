@@ -87,12 +87,14 @@ CHAR
 class DigitalGreenCertificateHelper:
 
     """
-    https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
-    https://www.bartwolff.com/Blog/2021/08/08/decoding-the-eu-digital-covid-certificate-qr-code
-    https://github.com/ehn-dcc-development/eu-dcc-hcert-spec
-    https://pycose.readthedocs.io/en/latest/pycose/messages/sign1message.html
-    https://dx.dragan.ba/digital-covid-certificate/
-    https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
+
+    References:
+      - https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+      - https://www.bartwolff.com/Blog/2021/08/08/decoding-the-eu-digital-covid-certificate-qr-code
+      - https://github.com/ehn-dcc-development/eu-dcc-hcert-spec
+      - https://pycose.readthedocs.io/en/latest/pycose/messages/sign1message.html
+      - https://dx.dragan.ba/digital-covid-certificate/
+      - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
 
     """
 
@@ -110,31 +112,41 @@ class DigitalGreenCertificateHelper:
         return cose_key
 
     @staticmethod
-    def encode(data, prefix="HC1"):
+    def dgc_encode(data, prefix="HC1"):
         cbortag = cbor2.CBORTag(18, [
             data["protected_header"],
             data["unprotected_header"],
             cbor2.dumps(data["payload"]),
             data["signature"],
         ])
-        decompressed = cbor2.dumps(cbortag)
-        compressed = zlib.compress(decompressed)
-        b45data = base45.b45encode(compressed)
+        b45data = DigitalGreenCertificateHelper.encode(cbortag)
         payload = prefix + ":" + b45data.decode()
         return payload
 
     @staticmethod
-    def decode(payload, prefix="HC1"):
+    def encode(cbortag):
+        decompressed = cbor2.dumps(cbortag)
+        compressed = zlib.compress(decompressed)
+        b45data = base45.b45encode(compressed)
+        return b45data
+
+    @staticmethod
+    def dgc_decode(payload, prefix="HC1"):
         b45data = payload.replace(prefix + ":", "")
-        decoded = base45.b45decode(b45data)
-        decompressed = zlib.decompress(decoded)
-        cbortag = cbor2.loads(decompressed)
+        cbortag = DigitalGreenCertificateHelper.decode(b45data)
         return {
             "protected_header": cbortag.value[0],
             "unprotected_header": cbortag.value[1],
             "payload": cbor2.loads(cbortag.value[2]),
             "signature": cbortag.value[3]
         }
+
+    @staticmethod
+    def decode(payload):
+        decoded = base45.b45decode(payload)
+        decompressed = zlib.decompress(decoded)
+        cbortag = cbor2.loads(decompressed)
+        return cbortag
 
     @staticmethod
     def sign(payload, key=None):
