@@ -94,7 +94,8 @@ class DigitalGreenCertificateHelper:
       - https://github.com/ehn-dcc-development/eu-dcc-hcert-spec
       - https://pycose.readthedocs.io/en/latest/pycose/messages/sign1message.html
       - https://dx.dragan.ba/digital-covid-certificate/
-      - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
+      - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign17
+      - https://harrisonsand.com/posts/covid-certificates/
 
     """
 
@@ -109,30 +110,25 @@ class DigitalGreenCertificateHelper:
             KpKty: KtyOKP,
             OKPKpCurve: Ed25519,
             KpKeyOps: [SignOp, VerifyOp],
-            OKPKpD: secrets.token_bytes(32),
-            OKPKpX: secrets.token_bytes(32),
+            OKPKpD: secrets.token_bytes(32),  # Private key
+            OKPKpX: secrets.token_bytes(32),  # Public key
         })
 
     @staticmethod
     def encode(data, header=None, key=None, prefix="HC1"):
 
-        # Encode data:
-        cbordata = cbor2.dumps(data)
+        header = header or DigitalGreenCertificateHelper.get_default_header()
+        key = key or DigitalGreenCertificateHelper.get_random_key()
 
-        # Sign message:
-        message = DigitalGreenCertificateHelper.sign(cbordata, header=header, key=key)
-        signature = message.compute_signature()
-
-        # Compose COSE Sign-1 as CBOR-18 Tag:
-        cbortag = cbor2.CBORTag(18,             [
-            message.phdr_encoded,
-            {},
-            cbordata,
-            signature
-        ])
+        message = Sign1Message(
+            phdr=header,
+            uhdr={},
+            payload=cbor2.dumps(data),
+            key=key
+        )
 
         # Encode (CBOR -> ZLIB -> BASE45):
-        decompressed = cbor2.dumps(cbortag)
+        decompressed = message.encode()
         compressed = zlib.compress(decompressed)
         b45data = base45.b45encode(compressed)
 
@@ -152,17 +148,17 @@ class DigitalGreenCertificateHelper:
 
         decoded = base45.b45decode(payload)
         decompressed = zlib.decompress(decoded)
-        cbortag = cbor2.loads(decompressed)
+
+        message = Sign1Message.decode(decompressed)
+        message.key = key
 
         if key is not None:
-            check = DigitalGreenCertificateHelper.verify(decompressed, key=key)
+            check = message.verify_signature()
+            print(check)
 
-        return {
-            "protected_header": cbortag.value[0],
-            "unprotected_header": cbortag.value[1],
-            "payload": cbor2.loads(cbortag.value[2]),
-            "signature": cbortag.value[3]
-        }
+        data = cbor2.loads(message.payload)
+
+        return data
 
     @staticmethod
     def sign(data, header=None, key=None):
