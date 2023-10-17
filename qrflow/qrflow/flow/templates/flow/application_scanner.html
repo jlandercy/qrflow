@@ -51,6 +51,7 @@
 
 
     <script type="text/javascript">
+        var application_ajax_mode = {{ object.ajax_mode|lower }};
         var application_target_url = "{{ object.forward_endpoint.target }}";
         var application_request_mode = "{{ object.forward_endpoint.method }}";
     </script>
