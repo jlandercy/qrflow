@@ -1,4 +1,5 @@
 import io
+import re
 import zlib
 
 from pycose.messages import Sign1Message
@@ -33,7 +34,7 @@ class BarcodeHelper:
 class QRCodeHelper:
 
     @staticmethod
-    def create(payload: str):
+    def create(payload):
 
         # Create QR Code:
         code = qrcode.QRCode(
@@ -100,35 +101,52 @@ class DigitalGreenCertificateHelper:
       - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
     """
 
-    @staticmethod
-    def get_default_header():
-        return {Algorithm: EdDSA, KID: b'kid2'}
+    prefix_regex = re.compile("^([A-Z]{2}\d):")
 
     @staticmethod
-    def get_random_key():
+    def get_header(key_id=b"kid"):
+        return {Algorithm: EdDSA, KID: key_id}
 
-        # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
-        private_key = Ed25519PrivateKey.generate()
-        public_key = private_key.public_key()
+    @staticmethod
+    def create_key(public_key, private_key=None):
+
+        operations = [VerifyOp]
+        if private_key is None:
+            private_key = b""
+        else:
+            operations += [SignOp]
 
         # https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
         return CoseKey.from_dict({
             KpKty: KtyOKP,
             OKPKpCurve: Ed25519,
-            KpKeyOps: [SignOp, VerifyOp],
-            OKPKpD: private_key._raw_private_bytes(),
-            OKPKpX: public_key._raw_public_bytes(),
+            KpKeyOps: operations,
+            OKPKpD: private_key,
+            OKPKpX: public_key,
         })
 
     @staticmethod
-    def encode(data, header=None, key=None, prefix="HC1"):
+    def create_new_key():
 
-        header = header or DigitalGreenCertificateHelper.get_default_header()
-        key = key or DigitalGreenCertificateHelper.get_random_key()
+        # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
+        private_key = Ed25519PrivateKey.generate()
+        public_key = private_key.public_key()
+
+        return DigitalGreenCertificateHelper.create_key(
+            public_key=public_key._raw_public_bytes(),
+            private_key=private_key._raw_private_bytes(),
+        )
+
+    @staticmethod
+    def encode(data, protected_header=None, unprotected_header=None, key=None, prefix="HC1"):
+
+        protected_header = protected_header or DigitalGreenCertificateHelper.get_header()
+        unprotected_header = unprotected_header or {}
+        key = key or DigitalGreenCertificateHelper.create_new_key()
 
         message = Sign1Message(
-            phdr=header,
-            uhdr={},
+            phdr=protected_header,
+            uhdr=unprotected_header,
             payload=cbor2.dumps(data),
             key=key
         )
@@ -137,7 +155,6 @@ class DigitalGreenCertificateHelper:
         decompressed = message.encode()
         compressed = zlib.compress(decompressed)
         b45data = base45.b45encode(compressed)
-
         payload = b45data.decode()
 
         # Prefix payload:
@@ -147,10 +164,13 @@ class DigitalGreenCertificateHelper:
         return payload
 
     @staticmethod
-    def decode(payload, key=None, prefix="HC1"):
+    def decode(payload, key=None):
 
-        if prefix:
-            payload = payload.replace(prefix + ":", "")
+        prefix = None
+        match = DigitalGreenCertificateHelper.prefix_regex.match(payload)
+        if match:
+            payload = DigitalGreenCertificateHelper.prefix_regex.sub("", payload)
+            prefix = match.group(1)
 
         decoded = base45.b45decode(payload)
         decompressed = zlib.decompress(decoded)
@@ -158,31 +178,21 @@ class DigitalGreenCertificateHelper:
         message = Sign1Message.decode(decompressed)
         message.key = key
 
-        if key is not None:
-            check = message.verify_signature()
+        checked = key is not None
+        if checked:
+            verified = message.verify_signature()
+        else:
+            verified = False
 
         data = cbor2.loads(message.payload)
 
-        return data
-
-    @staticmethod
-    def sign(data, header=None, key=None):
-
-        key = key or DigitalGreenCertificateHelper.get_random_key()
-        header = header or DigitalGreenCertificateHelper.get_default_header()
-
-        message = Sign1Message(
-            phdr=header,
-            uhdr={},
-            payload=data,
-            key=key
-        )
-
-        return message
-
-    @staticmethod
-    def verify(payload, key):
-        message = Sign1Message.decode(payload)
-        message.key = key
-        return message.verify_signature()
+        return {
+            "prefix": prefix,
+            "protected_header": message.phdr,
+            "unprotected_header": message.uhdr,
+            "payload": data,
+            "signature": message.signature,
+            "checked": checked,
+            "verified": verified,
+        }
 

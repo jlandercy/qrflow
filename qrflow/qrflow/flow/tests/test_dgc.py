@@ -1,3 +1,5 @@
+import pprint
+
 from pycose.messages import Sign1Message
 
 from django.test import TestCase, SimpleTestCase
@@ -10,8 +12,8 @@ class GenericDGCTestCase:
     helper = DigitalGreenCertificateHelper
 
     def setUp(self):
-        self.header = self.helper.get_default_header()
-        self.key = self.helper.get_random_key()
+        self.header = self.helper.get_header()
+        self.key = self.helper.create_new_key()
 
     def test_signature(self):
         message = Sign1Message(
@@ -25,9 +27,11 @@ class GenericDGCTestCase:
         self.assertTrue(decoded.verify_signature())
 
     def test_encode_decode_verify(self):
-        payload = self.helper.encode(self.data, key=self.key, header=self.header)
-        data = self.helper.decode(payload, key=self.key)
-        self.assertEqual(self.data, data)
+        payload = self.helper.encode(self.data, key=self.key, protected_header=self.header)
+        public_key = DigitalGreenCertificateHelper.create_key(public_key=self.key.x)
+        data = self.helper.decode(payload, key=public_key)
+        pprint.pprint(data)
+        self.assertEqual(self.data, data["payload"])
 
 
 class SimplePayloadDGC(GenericDGCTestCase, SimpleTestCase):
