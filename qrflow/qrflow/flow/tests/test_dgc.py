@@ -22,8 +22,7 @@ class GenericDGCTestCase:
         encoded = message.encode()
         decoded = Sign1Message.decode(encoded)
         decoded.key = self.key
-        print(decoded.verify_signature())
-
+        self.assertTrue(decoded.verify_signature())
 
     def test_encode_decode_verify(self):
         payload = self.helper.encode(self.data, key=self.key, header=self.header)

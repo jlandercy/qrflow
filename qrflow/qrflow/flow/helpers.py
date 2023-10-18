@@ -1,5 +1,4 @@
 import io
-import secrets
 import zlib
 
 from pycose.messages import Sign1Message
@@ -10,6 +9,8 @@ from pycose.keys.curves import Ed25519
 from pycose.keys.keyparam import KpKty, OKPKpD, OKPKpX, KpKeyOps, OKPKpCurve
 from pycose.keys.keytype import KtyOKP
 from pycose.keys.keyops import SignOp, VerifyOp
+
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 import barcode
 from barcode.writer import ImageWriter
@@ -96,7 +97,7 @@ class DigitalGreenCertificateHelper:
       - https://dx.dragan.ba/digital-covid-certificate/
       - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign17
       - https://harrisonsand.com/posts/covid-certificates/
-
+      - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
     """
 
     @staticmethod
@@ -105,13 +106,18 @@ class DigitalGreenCertificateHelper:
 
     @staticmethod
     def get_random_key():
-        # Dummy key from https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
+
+        # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
+        private_key = Ed25519PrivateKey.generate()
+        public_key = private_key.public_key()
+
+        # https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
         return CoseKey.from_dict({
             KpKty: KtyOKP,
             OKPKpCurve: Ed25519,
             KpKeyOps: [SignOp, VerifyOp],
-            OKPKpD: secrets.token_bytes(32),  # Private key
-            OKPKpX: secrets.token_bytes(32),  # Public key
+            OKPKpD: private_key._raw_private_bytes(),
+            OKPKpX: public_key._raw_public_bytes(),
         })
 
     @staticmethod
@@ -154,7 +160,6 @@ class DigitalGreenCertificateHelper:
 
         if key is not None:
             check = message.verify_signature()
-            print(check)
 
         data = cbor2.loads(message.payload)
 
