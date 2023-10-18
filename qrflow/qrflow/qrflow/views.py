@@ -39,7 +39,6 @@ class FileServerView(LoginRequiredMixin, View):
 
     @staticmethod
     def get_file_list(request):
-        #organization = Organization.objects.get(id=request.COOKIES["organization"])
         organizations = request.user.organization_set.all()
         files = set()
         files.update(Code.objects.filter(application__organization__in=organizations).values_list("image", flat=True))

@@ -52,7 +52,6 @@ class UnverifiableDGCTestCase:
 
     def test_decode(self):
         data = self.helper.decode(self.payload, key=None)
-        pprint.pprint(data)
 
 
 class VaccinationDGC(UnverifiableDGCTestCase, SimpleTestCase):
