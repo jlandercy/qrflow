@@ -119,6 +119,7 @@ class DigitalGreenCertificateHelper:
       - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
       - https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
       - https://github.com/ehn-dcc-development/eu-dcc-schema/tree/release/1.3.0/valuesets
+      - https://github.com/ehn-dcc-development/ehn-sign-verify-python-trivial/blob/main/hc1_verify.py
     """
 
     prefix_regex = re.compile("^([A-Z]{2}\d):")
@@ -126,10 +127,12 @@ class DigitalGreenCertificateHelper:
     @classmethod
     def encode(cls, data, protected_header=None, unprotected_header=None, key=None, prefix="HC1"):
 
+        # Setup parameters:
         protected_header = protected_header or cls.get_header()
         unprotected_header = unprotected_header or {}
         key = key or cls.create_new_key()
 
+        # Create message:
         message = Sign1Message(
             phdr=protected_header,
             uhdr=unprotected_header,
@@ -137,13 +140,13 @@ class DigitalGreenCertificateHelper:
             key=key
         )
 
-        # Encode (CBOR -> ZLIB -> BASE45):
+        # Encode message (CBOR, ZLIB, BASE45):
         decompressed = message.encode()
         compressed = zlib.compress(decompressed)
         b45data = base45.b45encode(compressed)
         payload = b45data.decode()
 
-        # Prefix payload:
+        # Add prefix to payload:
         if prefix:
             payload = prefix + ":" + payload
 
@@ -152,24 +155,29 @@ class DigitalGreenCertificateHelper:
     @classmethod
     def decode(cls, payload, key=None):
 
+        # Remove prefix from payload:
         prefix = None
         match = cls.prefix_regex.match(payload)
         if match:
             payload = cls.prefix_regex.sub("", payload)
             prefix = match.group(1)
 
+        # Decode payload (BASE45, ZLIB):
         decoded = base45.b45decode(payload)
         decompressed = zlib.decompress(decoded)
 
+        # Create message (CBOR):
         message = Sign1Message.decode(decompressed)
         message.key = key
 
+        # Check signature:
         checked = key is not None
         if checked:
             verified = message.verify_signature()
         else:
             verified = False
 
+        # Decode payload (CBOR):
         data = cbor2.loads(message.payload)
 
         return {
