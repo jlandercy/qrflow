@@ -3,15 +3,9 @@ import re
 import zlib
 
 from pycose.messages import Sign1Message
-from pycose.keys import CoseKey, EC2Key
+from pycose.keys import EC2Key, OKPKey
 from pycose.headers import Algorithm, KID
 from pycose.algorithms import EdDSA, Es256
-from pycose.keys.curves import Ed25519, P256
-from pycose.keys.keyparam import KpKty, OKPKpD, OKPKpX, KpKeyOps, OKPKpCurve
-from pycose.keys.keytype import KtyOKP
-from pycose.keys.keyops import SignOp, VerifyOp
-
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 import barcode
 from barcode.writer import ImageWriter
@@ -92,35 +86,10 @@ class CoseKeyHelper:
     def get_header(key_id=b"kid"):
         return {Algorithm: EdDSA, KID: key_id}
 
-    @staticmethod
-    def create_key(public_key, private_key=None):
-
-        operations = [VerifyOp]
-        if private_key is None:
-            private_key = b""
-        else:
-            operations += [SignOp]
-
-        # https://pycose.readthedocs.io/en/latest/examples.html#cose-sign1
-        return CoseKey.from_dict({
-            KpKty: KtyOKP,
-            OKPKpCurve: Ed25519,
-            KpKeyOps: operations,
-            OKPKpD: private_key,
-            OKPKpX: public_key,
-        })
-
     @classmethod
     def create_new_key(cls):
-
-        # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
-        private_key = Ed25519PrivateKey.generate()
-        public_key = private_key.public_key()
-
-        return cls.create_key(
-            public_key=public_key._raw_public_bytes(),
-            private_key=private_key._raw_private_bytes(),
-        )
+        # https://pycose.readthedocs.io/en/latest/pycose/keys/okp.html
+        return OKPKey.generate_key(crv='ED25519', optional_params={'ALG': 'EDDSA'})
 
 
 class EC2KeyHelper:
@@ -130,14 +99,9 @@ class EC2KeyHelper:
         return {Algorithm: Es256, KID: key_id}
 
     @staticmethod
-    def create_key(public_key=None, private_key=None):
-        # https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
-        return EC2Key(crv='P_256', d=private_key, optional_params={'ALG': 'ES256'})
-
-    @staticmethod
     def create_new_key():
         # https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
-        return EC2Key.generate_key(crv='P_256')
+        return EC2Key.generate_key(crv='P_256', optional_params={'ALG': 'ES256'})
 
 
 class DigitalGreenCertificateHelper:
