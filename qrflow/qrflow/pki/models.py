@@ -45,7 +45,7 @@ class Certificate(AbstractBaseModel, AbstractOwnershipModel):
                 public_key, 'FileField', 'ca.crt', 'PEM', public_key.getbuffer().nbytes, None
             )
             self.private_key = InMemoryUploadedFile(
-                private_key, 'FileField', 'ca.crt', 'PEM', private_key.getbuffer().nbytes, None
+                private_key, 'FileField', 'ca.key', 'PEM', private_key.getbuffer().nbytes, None
             )
 
         super().save(*args, **kwargs)
