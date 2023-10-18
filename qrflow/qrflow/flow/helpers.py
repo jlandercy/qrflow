@@ -159,12 +159,12 @@ class DigitalGreenCertificateHelper:
 
     prefix_regex = re.compile("^([A-Z]{2}\d):")
 
-    @staticmethod
-    def encode(data, protected_header=None, unprotected_header=None, key=None, prefix="HC1"):
+    @classmethod
+    def encode(cls, data, protected_header=None, unprotected_header=None, key=None, prefix="HC1"):
 
-        protected_header = protected_header or DigitalGreenCertificateHelper.get_header()
+        protected_header = protected_header or cls.get_header()
         unprotected_header = unprotected_header or {}
-        key = key or DigitalGreenCertificateHelper.create_new_key()
+        key = key or cls.create_new_key()
 
         message = Sign1Message(
             phdr=protected_header,
@@ -185,13 +185,13 @@ class DigitalGreenCertificateHelper:
 
         return payload
 
-    @staticmethod
-    def decode(payload, key=None):
+    @classmethod
+    def decode(cls, payload, key=None):
 
         prefix = None
-        match = DigitalGreenCertificateHelper.prefix_regex.match(payload)
+        match = cls.prefix_regex.match(payload)
         if match:
-            payload = DigitalGreenCertificateHelper.prefix_regex.sub("", payload)
+            payload = cls.prefix_regex.sub("", payload)
             prefix = match.group(1)
 
         decoded = base45.b45decode(payload)

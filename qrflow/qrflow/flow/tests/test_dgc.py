@@ -20,7 +20,7 @@ class VerifiableDGCTestCase:
         message = Sign1Message(
             phdr=self.header,
             key=self.key,
-            payload=b"Some nasty payload"
+            payload=b"Some payload"
         )
         encoded = message.encode()
         decoded = Sign1Message.decode(encoded)
@@ -30,8 +30,8 @@ class VerifiableDGCTestCase:
     def test_encode_decode_verify(self):
         payload = self.helper.encode(self.data, key=self.key, protected_header=self.header)
         data = self.helper.decode(payload, key=self.key)
-        pprint.pprint(data)
         self.assertEqual(self.data, data["payload"])
+        self.assertTrue(data["checked"] and data["verified"])
 
 
 class SimplePayloadTestCase:
