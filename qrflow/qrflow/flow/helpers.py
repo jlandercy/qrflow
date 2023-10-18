@@ -3,10 +3,10 @@ import re
 import zlib
 
 from pycose.messages import Sign1Message
-from pycose.keys import CoseKey
+from pycose.keys import CoseKey, EC2Key
 from pycose.headers import Algorithm, KID
-from pycose.algorithms import EdDSA
-from pycose.keys.curves import Ed25519
+from pycose.algorithms import EdDSA, Es256
+from pycose.keys.curves import Ed25519, P256
 from pycose.keys.keyparam import KpKty, OKPKpD, OKPKpX, KpKeyOps, OKPKpCurve
 from pycose.keys.keytype import KtyOKP
 from pycose.keys.keyops import SignOp, VerifyOp
@@ -86,22 +86,7 @@ CHAR
         raise NotImplemented
 
 
-class DigitalGreenCertificateHelper:
-
-    """
-
-    References:
-      - https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
-      - https://www.bartwolff.com/Blog/2021/08/08/decoding-the-eu-digital-covid-certificate-qr-code
-      - https://github.com/ehn-dcc-development/eu-dcc-hcert-spec
-      - https://pycose.readthedocs.io/en/latest/pycose/messages/sign1message.html
-      - https://dx.dragan.ba/digital-covid-certificate/
-      - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign17
-      - https://harrisonsand.com/posts/covid-certificates/
-      - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
-    """
-
-    prefix_regex = re.compile("^([A-Z]{2}\d):")
+class CoseKeyHelper:
 
     @staticmethod
     def get_header(key_id=b"kid"):
@@ -125,17 +110,54 @@ class DigitalGreenCertificateHelper:
             OKPKpX: public_key,
         })
 
-    @staticmethod
-    def create_new_key():
+    @classmethod
+    def create_new_key(cls):
 
         # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
         private_key = Ed25519PrivateKey.generate()
         public_key = private_key.public_key()
 
-        return DigitalGreenCertificateHelper.create_key(
+        return cls.create_key(
             public_key=public_key._raw_public_bytes(),
             private_key=private_key._raw_private_bytes(),
         )
+
+
+class EC2KeyHelper:
+
+    @staticmethod
+    def get_header(key_id=b"kid"):
+        return {Algorithm: Es256, KID: key_id}
+
+    @staticmethod
+    def create_key(public_key=None, private_key=None):
+        # https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
+        return EC2Key(crv='P_256', d=private_key, optional_params={'ALG': 'ES256'})
+
+    @staticmethod
+    def create_new_key():
+        # https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
+        return EC2Key.generate_key(crv='P_256')
+
+
+class DigitalGreenCertificateHelper:
+
+    """
+
+    References:
+      - https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+      - https://www.bartwolff.com/Blog/2021/08/08/decoding-the-eu-digital-covid-certificate-qr-code
+      - https://github.com/ehn-dcc-development/eu-dcc-hcert-spec
+      - https://pycose.readthedocs.io/en/latest/pycose/messages/sign1message.html
+      - https://dx.dragan.ba/digital-covid-certificate/
+      - https://pycose.readthedocs.io/en/latest/examples.html#cose-sign17
+      - https://harrisonsand.com/posts/covid-certificates/
+      - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
+      - https://pycose.readthedocs.io/en/latest/pycose/keys/ec2.html
+      - https://github.com/ehn-dcc-development/eu-dcc-schema/tree/release/1.3.0/valuesets
+    """
+
+    prefix_regex = re.compile("^([A-Z]{2}\d):")
 
     @staticmethod
     def encode(data, protected_header=None, unprotected_header=None, key=None, prefix="HC1"):
@@ -195,4 +217,12 @@ class DigitalGreenCertificateHelper:
             "checked": checked,
             "verified": verified,
         }
+
+
+class CoseKeyDGCHelper(CoseKeyHelper, DigitalGreenCertificateHelper):
+    pass
+
+
+class EC2KeyDGCHelper(EC2KeyHelper, DigitalGreenCertificateHelper):
+    pass
 
