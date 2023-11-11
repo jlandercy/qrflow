@@ -12,7 +12,7 @@ from encrypted_json_fields import fields as efields
 from qrflow import constants
 from core.models import AbstractBaseModel, AbstractOwnershipModel
 from flow import managers
-from flow.helpers import QRCodeHelper, EC2KeyDGCHelper, EPCHelper, BarcodeHelper
+from flow.helpers import QRCodeHelper, DataMatrixHelper, EC2KeyDGCHelper, EPCHelper, BarcodeHelper
 
 
 class Endpoint(AbstractBaseModel, AbstractOwnershipModel):
@@ -82,6 +82,8 @@ class Code(AbstractBaseModel):
             image = QRCodeHelper.render(EPCHelper.encode(**self.payload))
         elif self.code_type == "QR-DGC":
             image = QRCodeHelper.render(EC2KeyDGCHelper.encode(self.payload))
+        elif self.code_type == "DM":
+            image = DataMatrixHelper.render(self.payload["message"])
         elif self.code_type in barcode.PROVIDED_BARCODES:
             image = BarcodeHelper.render(self.payload["message"], class_name=self.code_type)
         else:

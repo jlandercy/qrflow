@@ -12,6 +12,9 @@ from barcode.writer import ImageWriter
 import qrcode
 import base45
 import cbor2
+from pylibdmtx import pylibdmtx
+
+from PIL import Image
 
 
 class BarcodeHelper:
@@ -47,6 +50,22 @@ class QRCodeHelper:
     def render(payload):
         stream = io.BytesIO()
         image = QRCodeHelper.create(payload)
+        image.save(stream, format="png")
+        return stream
+
+
+class DataMatrixHelper:
+
+    @staticmethod
+    def create(payload):
+        encoded = pylibdmtx.encode(payload.encode('utf8'))
+        image = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
+        return image
+
+    @staticmethod
+    def render(payload):
+        stream = io.BytesIO()
+        image = DataMatrixHelper.create(payload)
         image.save(stream, format="png")
         return stream
 

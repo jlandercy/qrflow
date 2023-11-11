@@ -22,4 +22,5 @@ CODE_TYPES = [
     ('QR-JSON', 'QR-JSON'),
     ('QR-EPC', 'QR-EPC'),
     ('QR-DGC', 'QR-DGC'),
+    ('DM', 'DM'),
 ] + [(code, code.upper()) for code in barcode.PROVIDED_BARCODES]
