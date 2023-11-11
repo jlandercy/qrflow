@@ -20,7 +20,7 @@ RUN apt-get update \
        build-essential \
        ca-certificates \
        gettext \
-       libdmtx0a \
+       libdmtx0b \
        postgresql-client \
        python3-dev \
        python3-pip \
